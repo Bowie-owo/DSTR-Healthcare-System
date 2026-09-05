@@ -34,7 +34,7 @@ int main() {
         case 1:
             patients = LinkedList();
 
-            if (patients.loadCSV("datasets/dataset1.csv")) {
+            if (patients.loadCSV("datasets/dataset1 facility_a (1).csv")) {
                 cout << "\nFacility A dataset loaded successfully!\n";
                 cout << "Number of patients: "
                      << patients.getSize() << endl;
@@ -46,7 +46,7 @@ int main() {
         case 2:
             patients = LinkedList();
 
-            if (patients.loadCSV("datasets/dataset2.csv")) {
+            if (patients.loadCSV("datasets/dataset2 facility_b (1).csv")) {
                 cout << "\nFacility B dataset loaded successfully!\n";
                 cout << "Number of patients: "
                      << patients.getSize() << endl;
@@ -58,7 +58,7 @@ int main() {
         case 3:
             patients = LinkedList();
 
-            if (patients.loadCSV("datasets/dataset3.csv")) {
+            if (patients.loadCSV("datasets/dataset3_facility_c (1).csv")) {
                 cout << "\nFacility C dataset loaded successfully!\n";
                 cout << "Number of patients: "
                      << patients.getSize() << endl;
