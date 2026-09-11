@@ -5,7 +5,12 @@ Healthcare Data Structure Analysis System
 ## Implementations
 
 - Array
+* Jia Huey
+* Sin Yi
 - Singly Linked List
+* Ming Cyn
+* Bowie
+* Zhi Lin
 
 ## Team Members
 
