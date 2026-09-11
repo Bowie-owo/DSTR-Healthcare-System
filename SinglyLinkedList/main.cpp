@@ -46,7 +46,7 @@ int main() {
 
             if (facilityA.loadCSV("datasets/dataset1_facility_a.csv")) {
 
-                cout << "\nFacility A loaded successfully!\n";
+                cout << "\nFacility A dataset loaded successfully!\n";
                 cout << "Number of patients: "
                      << facilityA.getSize() << endl;
 
@@ -57,11 +57,12 @@ int main() {
 
             break;
 
+
         case 2:
 
             if (facilityB.loadCSV("datasets/dataset1_facility_b.csv")) {
 
-                cout << "\nFacility B loaded successfully!\n";
+                cout << "\nFacility B dataset loaded successfully!\n";
                 cout << "Number of patients: "
                      << facilityB.getSize() << endl;
 
@@ -72,11 +73,12 @@ int main() {
 
             break;
 
+
         case 3:
 
             if (facilityC.loadCSV("datasets/dataset1_facility_c.csv")) {
 
-                cout << "\nFacility C loaded successfully!\n";
+                cout << "\nFacility C dataset loaded successfully!\n";
                 cout << "Number of patients: "
                      << facilityC.getSize() << endl;
 
@@ -86,6 +88,7 @@ int main() {
             }
 
             break;
+
 
         case 4:
 
@@ -118,6 +121,7 @@ int main() {
 
             break;
 
+
         case 5:
 
             cout << "\n";
@@ -146,6 +150,7 @@ int main() {
             }
 
             break;
+
 
         case 6:
 
@@ -176,6 +181,7 @@ int main() {
 
             break;
 
+
         case 7:
 
             cout << "\n";
@@ -201,6 +207,7 @@ int main() {
             }
 
             break;
+
 
         case 8:
 
@@ -228,10 +235,12 @@ int main() {
 
             break;
 
+
         case 9:
 
             cout << "\nExiting MetroHealth System...\n";
             break;
+
 
         default:
 
