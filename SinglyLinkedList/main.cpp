@@ -1,5 +1,8 @@
 #include <iostream>
 #include "LinkedList.hpp"
+#include "ageGroupAnalysis.hpp"
+#include "careTypeAnalysis.hpp"
+#include "billingAnalysis.hpp"
 
 using namespace std;
 
@@ -52,7 +55,7 @@ int main() {
             break;
 
         case 2:
-            if (facilityB.loadCSV("datasets/dataset1_facility_b.csv")) {
+            if (facilityB.loadCSV("datasets/dataset2_facility_b.csv")) {
                 cout << "\nFacility B dataset loaded successfully!\n";
                 cout << "Number of patients: " << facilityB.getSize() << endl;
                 facilityB.display();
@@ -61,7 +64,7 @@ int main() {
             break;
 
         case 3:
-            if (facilityC.loadCSV("datasets/dataset1_facility_c.csv")) {
+            if (facilityC.loadCSV("datasets/dataset3_facility_c.csv")) {
                 cout << "\nFacility C dataset loaded successfully!\n";
                 cout << "Number of patients: " << facilityC.getSize() << endl;
                 facilityC.display();
@@ -71,8 +74,8 @@ int main() {
 
         case 4:
             if (facilityA.loadCSV("datasets/dataset1_facility_a.csv")) facilityALoaded = true;
-            if (facilityB.loadCSV("datasets/dataset1_facility_b.csv")) facilityBLoaded = true;
-            if (facilityC.loadCSV("datasets/dataset1_facility_c.csv")) facilityCLoaded = true;
+            if (facilityB.loadCSV("datasets/dataset2_facility_b.csv")) facilityBLoaded = true;
+            if (facilityC.loadCSV("datasets/dataset3_facility_c.csv")) facilityCLoaded = true;
 
             if (facilityALoaded) { cout << "\n========== FACILITY A ==========\n"; facilityA.display(); }
             if (facilityBLoaded) { cout << "\n========== FACILITY B ==========\n"; facilityB.display(); }
@@ -81,33 +84,33 @@ int main() {
 
         case 5:
             cout << "\n========== AGE GROUP ANALYSIS ==========\n";
-            if (facilityALoaded) { cout << "\nFACILITY A\n"; facilityA.ageGroupAnalysis(); }
-            if (facilityBLoaded) { cout << "\nFACILITY B\n"; facilityB.ageGroupAnalysis(); }
-            if (facilityCLoaded) { cout << "\nFACILITY C\n"; facilityC.ageGroupAnalysis(); }
+            if (facilityALoaded) { cout << "\nFACILITY A\n"; ageGroupAnalysis(facilityA); }
+            if (facilityBLoaded) { cout << "\nFACILITY B\n"; ageGroupAnalysis(facilityB); }
+            if (facilityCLoaded) { cout << "\nFACILITY C\n"; ageGroupAnalysis(facilityC); }
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
         case 6:
             cout << "\n========== CARE TYPE ANALYSIS ==========\n";
-            if (facilityALoaded) { cout << "\nFACILITY A\n"; facilityA.careTypeAnalysis(); }
-            if (facilityBLoaded) { cout << "\nFACILITY B\n"; facilityB.careTypeAnalysis(); }
-            if (facilityCLoaded) { cout << "\nFACILITY C\n"; facilityC.careTypeAnalysis(); }
+            if (facilityALoaded) { cout << "\nFACILITY A\n"; careTypeAnalysis(facilityA); }
+            if (facilityBLoaded) { cout << "\nFACILITY B\n"; careTypeAnalysis(facilityB); }
+            if (facilityCLoaded) { cout << "\nFACILITY C\n"; careTypeAnalysis(facilityC); }
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
         case 7:
             cout << "\n========== TOTAL BILLING COST ==========\n";
-            if (facilityALoaded) facilityA.displayTotalBillingCost("FACILITY A");
-            if (facilityBLoaded) facilityB.displayTotalBillingCost("FACILITY B");
-            if (facilityCLoaded) facilityC.displayTotalBillingCost("FACILITY C");
+            if (facilityALoaded) displayTotalBillingCost(facilityA, "FACILITY A");
+            if (facilityBLoaded) displayTotalBillingCost(facilityB, "FACILITY B");
+            if (facilityCLoaded) displayTotalBillingCost(facilityC, "FACILITY C");
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
         case 8:
             cout << "\n========== DATASET SUMMARY ==========\n";
-            if (facilityALoaded) facilityA.displayDatasetSummary("FACILITY A");
-            if (facilityBLoaded) facilityB.displayDatasetSummary("FACILITY B");
-            if (facilityCLoaded) facilityC.displayDatasetSummary("FACILITY C");
+            if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
+            if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
+            if (facilityCLoaded) displayDatasetSummary(facilityC, "FACILITY C");
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
