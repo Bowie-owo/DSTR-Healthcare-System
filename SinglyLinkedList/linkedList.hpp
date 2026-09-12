@@ -125,6 +125,19 @@ public:
         return size;
     }
 
+    // Appends copies of every patient from 'other' onto the end of
+    // this list. Used to build a combined dataset across multiple
+    // facility lists (e.g. Facility A + B + C into one pool).
+    void appendAll(const LinkedList& other) {
+
+        const Node* current = other.getHead();
+
+        while (current != nullptr) {
+            insertBack(current->data);
+            current = current->next;
+        }
+    }
+
     // Read-only access to the head node so external modules
     // (analysis files) can traverse the list without needing
     // to be friends of / members of LinkedList.

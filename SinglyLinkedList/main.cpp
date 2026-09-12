@@ -1,5 +1,5 @@
 #include <iostream>
-#include "LinkedList.hpp"
+#include "linkedList.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "careTypeAnalysis.hpp"
 #include "billingAnalysis.hpp"
@@ -17,11 +17,12 @@ void displayMenu() {
     cout << "2. Load and Display Facility B\n";
     cout << "3. Load and Display Facility C\n";
     cout << "4. Load and Display All Datasets\n";
-    cout << "5. Age Group Analysis\n";
-    cout << "6. Care Type Analysis\n";
-    cout << "7. Total Billing Cost\n";
-    cout << "8. Dataset Summary\n";
-    cout << "9. Exit\n";
+    cout << "5. Age Group Analysis (Per Facility)\n";
+    cout << "6. Care Type Analysis (Per Facility)\n";
+    cout << "7. Total Billing Cost (Per Facility)\n";
+    cout << "8. Dataset Summary (Per Facility)\n";
+    cout << "9. Combined Analysis (All Facilities)\n";
+    cout << "10. Exit\n";
     cout << "================================================\n";
     cout << "Enter your choice: ";
 }
@@ -31,6 +32,7 @@ int main() {
     LinkedList facilityA;
     LinkedList facilityB;
     LinkedList facilityC;
+    LinkedList combined;
 
     bool facilityALoaded = false;
     bool facilityBLoaded = false;
@@ -55,7 +57,7 @@ int main() {
             break;
 
         case 2:
-            if (facilityB.loadCSV("datasets/dataset2_facility_b.csv")) {
+            if (facilityB.loadCSV("datasets/dataset1_facility_b.csv")) {
                 cout << "\nFacility B dataset loaded successfully!\n";
                 cout << "Number of patients: " << facilityB.getSize() << endl;
                 facilityB.display();
@@ -64,7 +66,7 @@ int main() {
             break;
 
         case 3:
-            if (facilityC.loadCSV("datasets/dataset3_facility_c.csv")) {
+            if (facilityC.loadCSV("datasets/dataset1_facility_c.csv")) {
                 cout << "\nFacility C dataset loaded successfully!\n";
                 cout << "Number of patients: " << facilityC.getSize() << endl;
                 facilityC.display();
@@ -74,8 +76,8 @@ int main() {
 
         case 4:
             if (facilityA.loadCSV("datasets/dataset1_facility_a.csv")) facilityALoaded = true;
-            if (facilityB.loadCSV("datasets/dataset2_facility_b.csv")) facilityBLoaded = true;
-            if (facilityC.loadCSV("datasets/dataset3_facility_c.csv")) facilityCLoaded = true;
+            if (facilityB.loadCSV("datasets/dataset1_facility_b.csv")) facilityBLoaded = true;
+            if (facilityC.loadCSV("datasets/dataset1_facility_c.csv")) facilityCLoaded = true;
 
             if (facilityALoaded) { cout << "\n========== FACILITY A ==========\n"; facilityA.display(); }
             if (facilityBLoaded) { cout << "\n========== FACILITY B ==========\n"; facilityB.display(); }
@@ -83,7 +85,7 @@ int main() {
             break;
 
         case 5:
-            cout << "\n========== AGE GROUP ANALYSIS ==========\n";
+            cout << "\n========== AGE GROUP ANALYSIS (PER FACILITY) ==========\n";
             if (facilityALoaded) { cout << "\nFACILITY A\n"; ageGroupAnalysis(facilityA); }
             if (facilityBLoaded) { cout << "\nFACILITY B\n"; ageGroupAnalysis(facilityB); }
             if (facilityCLoaded) { cout << "\nFACILITY C\n"; ageGroupAnalysis(facilityC); }
@@ -91,7 +93,7 @@ int main() {
             break;
 
         case 6:
-            cout << "\n========== CARE TYPE ANALYSIS ==========\n";
+            cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
             if (facilityALoaded) { cout << "\nFACILITY A\n"; careTypeAnalysis(facilityA); }
             if (facilityBLoaded) { cout << "\nFACILITY B\n"; careTypeAnalysis(facilityB); }
             if (facilityCLoaded) { cout << "\nFACILITY C\n"; careTypeAnalysis(facilityC); }
@@ -99,7 +101,7 @@ int main() {
             break;
 
         case 7:
-            cout << "\n========== TOTAL BILLING COST ==========\n";
+            cout << "\n========== TOTAL BILLING COST (PER FACILITY) ==========\n";
             if (facilityALoaded) displayTotalBillingCost(facilityA, "FACILITY A");
             if (facilityBLoaded) displayTotalBillingCost(facilityB, "FACILITY B");
             if (facilityCLoaded) displayTotalBillingCost(facilityC, "FACILITY C");
@@ -107,7 +109,7 @@ int main() {
             break;
 
         case 8:
-            cout << "\n========== DATASET SUMMARY ==========\n";
+            cout << "\n========== DATASET SUMMARY (PER FACILITY) ==========\n";
             if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
             if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
             if (facilityCLoaded) displayDatasetSummary(facilityC, "FACILITY C");
@@ -115,6 +117,33 @@ int main() {
             break;
 
         case 9:
+            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
+                cout << "\nPlease load at least one dataset first.\n";
+                break;
+            }
+
+            // Rebuild the combined list from whichever facilities
+            // are currently loaded, so it never goes stale if a
+            // facility gets reloaded.
+            combined.clear();
+            if (facilityALoaded) combined.appendAll(facilityA);
+            if (facilityBLoaded) combined.appendAll(facilityB);
+            if (facilityCLoaded) combined.appendAll(facilityC);
+
+            cout << "\n========== COMBINED ANALYSIS (ALL FACILITIES) ==========\n";
+            cout << "Total patients combined: " << combined.getSize() << endl;
+
+            cout << "\n---------- Age Group Analysis ----------\n";
+            ageGroupAnalysis(combined);
+
+            cout << "\n---------- Care Type Analysis ----------\n";
+            careTypeAnalysis(combined);
+
+            displayTotalBillingCost(combined, "COMBINED (ALL FACILITIES)");
+            displayDatasetSummary(combined, "COMBINED (ALL FACILITIES)");
+            break;
+
+        case 10:
             cout << "\nExiting MetroHealth System...\n";
             break;
 
@@ -122,7 +151,7 @@ int main() {
             cout << "\nInvalid choice. Please try again.\n";
         }
 
-    } while (choice != 9);
+    } while (choice != 10);
 
     return 0;
 }
