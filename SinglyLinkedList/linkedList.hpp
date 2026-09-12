@@ -47,6 +47,40 @@ private:
              * patient.daysVisitsPerYear;
     }
 
+    // Formats a number with thousand separators and 2 decimal places,
+    // e.g. 12000.5 -> "12,000.50"
+    string formatWithCommas(double value) {
+
+        ostringstream oss;
+        oss << fixed << setprecision(2) << value;
+        string numStr = oss.str();
+
+        size_t dotPos = numStr.find('.');
+        string intPart = numStr.substr(0, dotPos);
+        string decPart = numStr.substr(dotPos);
+
+        bool negative = false;
+        if (!intPart.empty() && intPart[0] == '-') {
+            negative = true;
+            intPart = intPart.substr(1);
+        }
+
+        string result;
+        int count = 0;
+
+        for (int i = (int)intPart.size() - 1; i >= 0; i--) {
+            result = intPart[i] + result;
+            count++;
+            if (count % 3 == 0 && i != 0) {
+                result = "," + result;
+            }
+        }
+
+        if (negative) result = "-" + result;
+
+        return result + decPart;
+    }
+
 public:
 
     LinkedList() {
@@ -181,6 +215,10 @@ public:
 
     // ==========================================
     // AGE GROUP ANALYSIS
+    // For each age group: a Care-Type breakdown table
+    // (Patient Count, Total Cost, Average Cost per Patient),
+    // sorted by Patient Count descending, plus a total
+    // billing figure for the age group.
     // ==========================================
 
     void ageGroupAnalysis() {
@@ -193,32 +231,22 @@ public:
             "Senior Citizens / Geriatric Care"
         };
 
+        string ageRanges[5] = {
+            "0-17", "18-25", "26-45", "46-60", "61-100"
+        };
+
         int minAge[5] = {0, 18, 26, 46, 61};
         int maxAge[5] = {17, 25, 45, 60, 100};
 
-        cout << "\n";
-        cout << "==============================================================================================================\n";
-        cout << "                              AGE GROUP ANALYSIS\n";
-        cout << "==============================================================================================================\n";
-
-        cout << left
-             << setw(38) << "Age Group"
-             << setw(10) << "Patients"
-             << setw(18) << "Total Cost"
-             << setw(18) << "Average Cost"
-             << setw(30) << "Most Preferred Care"
-             << endl;
-
-        cout << "--------------------------------------------------------------------------------------------------------------\n";
-
         for (int i = 0; i < 5; i++) {
 
-            int patientCount = 0;
-            double totalCost = 0;
-
-            string careTypes[10];
-            int careCounts[10];
+            string careTypes[20];
+            double careCosts[20];
+            int careCounts[20];
             int careTypeCount = 0;
+
+            int patientCount = 0;
+            double ageGroupTotal = 0;
 
             Node* current = head;
 
@@ -230,14 +258,13 @@ public:
 
                     patientCount++;
 
-                    totalCost += calculateCost(current->data);
+                    double cost = calculateCost(current->data);
+                    ageGroupTotal += cost;
 
                     string care = current->data.careType;
-
                     int position = -1;
 
                     for (int j = 0; j < careTypeCount; j++) {
-
                         if (careTypes[j] == care) {
                             position = j;
                             break;
@@ -245,13 +272,13 @@ public:
                     }
 
                     if (position == -1) {
-
                         careTypes[careTypeCount] = care;
+                        careCosts[careTypeCount] = cost;
                         careCounts[careTypeCount] = 1;
                         careTypeCount++;
-
                     }
                     else {
+                        careCosts[position] += cost;
                         careCounts[position]++;
                     }
                 }
@@ -259,33 +286,71 @@ public:
                 current = current->next;
             }
 
-            string mostPreferred = "None";
-            int highestCount = 0;
+            // Sort care types by patient count, descending
+            // (selection sort — keeps the "most preferred" care
+            // type as the first row, matching the sample output)
+            for (int a = 0; a < careTypeCount - 1; a++) {
 
-            for (int j = 0; j < careTypeCount; j++) {
+                int maxIdx = a;
 
-                if (careCounts[j] > highestCount) {
-                    highestCount = careCounts[j];
-                    mostPreferred = careTypes[j];
+                for (int b = a + 1; b < careTypeCount; b++) {
+                    if (careCounts[b] > careCounts[maxIdx]) {
+                        maxIdx = b;
+                    }
+                }
+
+                if (maxIdx != a) {
+                    string tmpCare = careTypes[a];
+                    careTypes[a] = careTypes[maxIdx];
+                    careTypes[maxIdx] = tmpCare;
+
+                    int tmpCount = careCounts[a];
+                    careCounts[a] = careCounts[maxIdx];
+                    careCounts[maxIdx] = tmpCount;
+
+                    double tmpCost = careCosts[a];
+                    careCosts[a] = careCosts[maxIdx];
+                    careCosts[maxIdx] = tmpCost;
                 }
             }
 
-            double averageCost = 0;
-
-            if (patientCount > 0) {
-                averageCost = totalCost / patientCount;
-            }
+            cout << "\n";
+            cout << "Age Group: " << ageRanges[i]
+                 << " (" << ageGroups[i] << ")\n";
+            cout << "--------------------------------------------------------------------------------\n";
 
             cout << left
-                 << setw(38) << ageGroups[i]
-                 << setw(10) << patientCount
-                 << setw(18) << fixed << setprecision(2) << totalCost
-                 << setw(18) << averageCost
-                 << setw(30) << mostPreferred
+                 << setw(16) << "Care Type"
+                 << setw(16) << "Patient Count"
+                 << setw(18) << "Total Cost ($)"
+                 << setw(30) << "Average Cost per Patient ($)"
                  << endl;
-        }
 
-        cout << "==============================================================================================================\n";
+            cout << "--------------------------------------------------------------------------------\n";
+
+            if (patientCount == 0) {
+
+                cout << "No patients in this age group.\n";
+            }
+            else {
+
+                for (int j = 0; j < careTypeCount; j++) {
+
+                    double avgCost = careCosts[j] / careCounts[j];
+
+                    cout << left
+                         << setw(16) << careTypes[j]
+                         << setw(16) << careCounts[j]
+                         << setw(18) << formatWithCommas(careCosts[j])
+                         << setw(30) << formatWithCommas(avgCost)
+                         << endl;
+                }
+            }
+
+            cout << "--------------------------------------------------------------------------------\n";
+            cout << "Total Billing for Age Group: $"
+                 << formatWithCommas(ageGroupTotal) << "\n";
+        }
     }
 
     // ==========================================
