@@ -57,7 +57,7 @@ int main() {
             break;
 
         case 2:
-            if (facilityB.loadCSV("datasets/dataset1_facility_b.csv")) {
+            if (facilityB.loadCSV("datasets/dataset2_facility_b.csv")) {
                 cout << "\nFacility B dataset loaded successfully!\n";
                 cout << "Number of patients: " << facilityB.getSize() << endl;
                 facilityB.display();
@@ -66,7 +66,7 @@ int main() {
             break;
 
         case 3:
-            if (facilityC.loadCSV("datasets/dataset1_facility_c.csv")) {
+            if (facilityC.loadCSV("datasets/dataset3_facility_c.csv")) {
                 cout << "\nFacility C dataset loaded successfully!\n";
                 cout << "Number of patients: " << facilityC.getSize() << endl;
                 facilityC.display();
@@ -76,8 +76,8 @@ int main() {
 
         case 4:
             if (facilityA.loadCSV("datasets/dataset1_facility_a.csv")) facilityALoaded = true;
-            if (facilityB.loadCSV("datasets/dataset1_facility_b.csv")) facilityBLoaded = true;
-            if (facilityC.loadCSV("datasets/dataset1_facility_c.csv")) facilityCLoaded = true;
+            if (facilityB.loadCSV("datasets/dataset2_facility_b.csv")) facilityBLoaded = true;
+            if (facilityC.loadCSV("datasets/dataset3_facility_c.csv")) facilityCLoaded = true;
 
             if (facilityALoaded) { cout << "\n========== FACILITY A ==========\n"; facilityA.display(); }
             if (facilityBLoaded) { cout << "\n========== FACILITY B ==========\n"; facilityB.display(); }
