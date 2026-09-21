@@ -17,11 +17,14 @@ void displayMainMenu() {
 
 int main() {
 
-    int choice;
+    int choice = 0;
 
     do {
         displayMainMenu();
-        cin >> choice;
+        if (!(cin >> choice)) {
+            cout << "\nInvalid input. Exiting MetroHealth System...\n";
+            break;
+        }
 
         switch (choice) {
 
