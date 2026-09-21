@@ -182,6 +182,8 @@ int main() {
             cout << "\nInvalid choice. Please try again.\n";
         }
 
+        cout << "\n\n\n\n\n";
+
     } while (choice != 10);
 
     return 0;
