@@ -17,7 +17,7 @@ void displayMenu() {
     cout << "2. Load and Display Facility B\n";
     cout << "3. Load and Display Facility C\n";
     cout << "4. Load and Display All Datasets\n";
-    cout << "5. Age Group Analysis (Per Facility)\n";
+    cout << "5. Age Group Analysis\n";
     cout << "6. Care Type Analysis (Per Facility)\n";
     cout << "7. Total Billing Cost (Per Facility)\n";
     cout << "8. Dataset Summary (Per Facility)\n";
@@ -79,18 +79,49 @@ int main() {
             if (facilityB.loadCSV("datasets/dataset2_facility_b.csv")) facilityBLoaded = true;
             if (facilityC.loadCSV("datasets/dataset3_facility_c.csv")) facilityCLoaded = true;
 
-            if (facilityALoaded) { cout << "\n========== FACILITY A ==========\n"; facilityA.display(); }
-            if (facilityBLoaded) { cout << "\n========== FACILITY B ==========\n"; facilityB.display(); }
-            if (facilityCLoaded) { cout << "\n========== FACILITY C ==========\n"; facilityC.display(); }
+            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
+                cout << "\nNo datasets could be loaded.\n";
+                break;
+            }
+
+            // Rebuild combined so it reflects whatever facilities just loaded successfully
+            combined.clear();
+            if (facilityALoaded) combined.appendAll(facilityA);
+            if (facilityBLoaded) combined.appendAll(facilityB);
+            if (facilityCLoaded) combined.appendAll(facilityC);
+
+            cout << "\n========== ALL DATASETS (COMBINED) ==========\n";
+            cout << "Total patients combined: " << combined.getSize() << endl;
+            combined.display();
             break;
 
-        case 5:
+        case 5: {
+            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
+                cout << "\nPlease load a dataset first.\n";
+                break;
+            }
+
+            int loadedCount = (facilityALoaded ? 1 : 0)
+                            + (facilityBLoaded ? 1 : 0)
+                            + (facilityCLoaded ? 1 : 0);
+
             cout << "\n========== AGE GROUP ANALYSIS (PER FACILITY) ==========\n";
             if (facilityALoaded) { cout << "\nFACILITY A\n"; ageGroupAnalysis(facilityA); }
             if (facilityBLoaded) { cout << "\nFACILITY B\n"; ageGroupAnalysis(facilityB); }
             if (facilityCLoaded) { cout << "\nFACILITY C\n"; ageGroupAnalysis(facilityC); }
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
+
+            if (loadedCount > 1) {
+                combined.clear();
+                if (facilityALoaded) combined.appendAll(facilityA);
+                if (facilityBLoaded) combined.appendAll(facilityB);
+                if (facilityCLoaded) combined.appendAll(facilityC);
+
+                cout << "\nCOMBINED (ALL FACILITIES)\n";
+                ageGroupAnalysis(combined);
+            }
+
             break;
+        }
 
         case 6:
             cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
