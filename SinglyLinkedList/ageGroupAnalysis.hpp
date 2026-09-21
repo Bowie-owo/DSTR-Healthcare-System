@@ -12,11 +12,10 @@ using namespace std;
 // ==========================================
 // PATIENTS BY AGE GROUP
 // ==========================================
-
-inline void ageGroupAnalysis(const LinkedList& list) {
+void ageGroupAnalysis(const LinkedList& list) {
 
     string ageGroups[20];
-    int ageCounts[20] = {};
+    int ageCounts[20] = {}; 
 
     int ageGroupCount = 0;
 
@@ -69,6 +68,18 @@ inline void ageGroupAnalysis(const LinkedList& list) {
              << setw(15) << ageCounts[i]
              << endl;
     }
+
+    cout << "--------------------------------------------------------------------------------\n";
+
+    int totalPatients = 0;
+    for (int i = 0; i < ageGroupCount; i++) {
+        totalPatients += ageCounts[i];
+    }
+
+    cout << left
+         << setw(45) << "TOTAL"
+         << setw(15) << totalPatients
+         << endl;
 
     cout << "================================================================================\n";
 }
