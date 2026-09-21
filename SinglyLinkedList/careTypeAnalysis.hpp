@@ -21,6 +21,8 @@ inline void careTypeAnalysis(const LinkedList& list) {
     double careDuration[20];
 
     int careTypeCount = 0;
+    double totalBilling = 0;
+    double totalStayHours = 0;
 
     const Node* current = list.getHead();
 
@@ -39,6 +41,8 @@ inline void careTypeAnalysis(const LinkedList& list) {
         }
 
         double cost = calculateCost(current->data);
+        totalBilling += cost;
+        totalStayHours += current->data.lengthOfStay;
 
         if (position == -1) {
 
@@ -67,7 +71,7 @@ inline void careTypeAnalysis(const LinkedList& list) {
     cout << left
          << setw(20) << "Care Type"
          << setw(15) << "Patients"
-         << setw(20) << "Total Cost"
+         << setw(20) << "Total Cost (RM)"
          << setw(20) << "Total Stay Hours"
          << endl;
 
@@ -80,10 +84,18 @@ inline void careTypeAnalysis(const LinkedList& list) {
              << setw(15) << careCounts[i]
              << setw(20) << fixed << setprecision(2)
              << careCosts[i]
-             << setw(20) << careDuration[i]
+             << setw(20) << setprecision(0) << careDuration[i]
              << endl;
     }
 
+    cout << "================================================================================\n";
+    cout << "                         FACILITY SUMMARY\n";
+    cout << "================================================================================\n";
+    cout << fixed << setprecision(2);
+    cout << left << setw(25) << "Total Patients" << list.getSize() << endl;
+    cout << left << setw(25) << "Total Billing Cost" << "RM " << totalBilling << endl;
+    cout << left << setw(25) << "Total Stay Hours" << setprecision(0)
+         << totalStayHours << " hours" << endl;
     cout << "================================================================================\n";
 }
 
