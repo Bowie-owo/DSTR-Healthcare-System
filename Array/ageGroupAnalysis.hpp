@@ -23,19 +23,19 @@ void ageGroupAnalysis(const vector<Patient>& patients,
         {
             ageGroupCount[0]++;
         }
-        else if (patient.age >= 18 && patient.age <= 24)
+        else if (patient.age >= 18 && patient.age <= 25)
         {
             ageGroupCount[1]++;
         }
-        else if (patient.age >= 25 && patient.age <= 39)
+        else if (patient.age >= 26 && patient.age <= 45)
         {
             ageGroupCount[2]++;
         }
-        else if (patient.age >= 40 && patient.age <= 59)
+        else if (patient.age >= 46 && patient.age <= 60)
         {
             ageGroupCount[3]++;
         }
-        else if (patient.age >= 60)
+        else if (patient.age >= 61 && patient.age <= 100)
         {
             ageGroupCount[4]++;
         }

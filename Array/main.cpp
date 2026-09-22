@@ -7,6 +7,7 @@
 
 #include "patient.hpp"
 #include "ageGroupAnalysis.hpp"
+#include "billingAnalysis.hpp"
 
 using namespace std;
 
@@ -114,108 +115,146 @@ int main() {
             break;
         }
 
-switch (choice) {
+    switch (choice) {
 
-case 1:
-    loadAndDisplayFacility("datasets/dataset1_facility_a.csv", "FACILITY A");
-    break;
+        case 1:
+            loadAndDisplayFacility("datasets/dataset1_facility_a.csv", "FACILITY A");
+            break;
 
-case 2:
-    loadAndDisplayFacility("datasets/dataset2_facility_b.csv", "FACILITY B");
-    break;
+        case 2:
+            loadAndDisplayFacility("datasets/dataset2_facility_b.csv", "FACILITY B");
+            break;
 
-case 3:
-    loadAndDisplayFacility("datasets/dataset3_facility_c.csv", "FACILITY C");
-    break;
+        case 3:
+            loadAndDisplayFacility("datasets/dataset3_facility_c.csv", "FACILITY C");
+            break;
 
-case 4:
-    loadAndDisplayFacility("datasets/dataset1_facility_a.csv", "FACILITY A");
-    loadAndDisplayFacility("datasets/dataset2_facility_b.csv", "FACILITY B");
-    loadAndDisplayFacility("datasets/dataset3_facility_c.csv", "FACILITY C");
-    break;
+        case 4:
+            loadAndDisplayFacility("datasets/dataset1_facility_a.csv", "FACILITY A");
+            loadAndDisplayFacility("datasets/dataset2_facility_b.csv", "FACILITY B");
+            loadAndDisplayFacility("datasets/dataset3_facility_c.csv", "FACILITY C");
+            break;
 
-// Sorting
-case 5:
-    cout << "\nThis feature is not implemented yet.\n";
-    break;
+        // Sorting
+        case 5:
+            cout << "\nThis feature is not implemented yet.\n";
+            break;
 
-// Searching
-case 6:
-    cout << "\nThis feature is not implemented yet.\n";
-    break;
+        // Searching
+        case 6:
+            cout << "\nThis feature is not implemented yet.\n";
+            break;
 
-// Length of Stay Analysis
-case 7:
-    cout << "\nThis feature is not implemented yet.\n";
-    break;
+        // Length of Stay Analysis
+        case 7:
+            cout << "\nThis feature is not implemented yet.\n";
+            break;
 
-// AGE GROUP ANALYSIS
-case 8:
-{
-    vector<Patient> facilityA;
-    vector<Patient> facilityB;
-    vector<Patient> facilityC;
+        // AGE GROUP ANALYSIS
+        case 8:
+        {
+            vector<Patient> facilityA;
+            vector<Patient> facilityB;
+            vector<Patient> facilityC;
 
-    loadDataset("datasets/dataset1_facility_a.csv", facilityA);
-    loadDataset("datasets/dataset2_facility_b.csv", facilityB);
-    loadDataset("datasets/dataset3_facility_c.csv", facilityC);
+            loadDataset("datasets/dataset1_facility_a.csv", facilityA);
+            loadDataset("datasets/dataset2_facility_b.csv", facilityB);
+            loadDataset("datasets/dataset3_facility_c.csv", facilityC);
 
-    cout << "\n========== AGE GROUP ANALYSIS (PER FACILITY) ==========\n";
+            cout << "\n========== AGE GROUP ANALYSIS (PER FACILITY) ==========\n";
 
-    ageGroupAnalysis(facilityA, "FACILITY A");
+            ageGroupAnalysis(facilityA, "FACILITY A");
 
-    ageGroupAnalysis(facilityB, "FACILITY B");
+            ageGroupAnalysis(facilityB, "FACILITY B");
 
-    ageGroupAnalysis(facilityC, "FACILITY C");
+            ageGroupAnalysis(facilityC, "FACILITY C");
 
-    // Combine all three datasets
-    vector<Patient> combined = facilityA;
+            // Combine all three datasets
+            vector<Patient> combined = facilityA;
 
-    combined.insert(
-        combined.end(),
-        facilityB.begin(),
-        facilityB.end()
-    );
+            combined.insert(
+                combined.end(),
+                facilityB.begin(),
+                facilityB.end()
+            );
 
-    combined.insert(
-        combined.end(),
-        facilityC.begin(),
-        facilityC.end()
-    );
+            combined.insert(
+                combined.end(),
+                facilityC.begin(),
+                facilityC.end()
+            );
 
-    ageGroupAnalysis(combined, "COMBINED (ALL FACILITIES)");
+            ageGroupAnalysis(combined, "COMBINED (ALL FACILITIES)");
 
-    break;
-}
+            break;
+        }
 
-// Care Type Analysis
-case 9:
-    cout << "\nThis feature is not implemented yet.\n";
-    break;
+        // Care Type Analysis
+        case 9:
+            cout << "\nThis feature is not implemented yet.\n";
+            break;
 
-// Total Billing Cost
-case 10:
-    cout << "\nThis feature is not implemented yet.\n";
-    break;
+        // Total Billing Cost
+        case 10:
+        {
+            vector<Patient> facilityA;
+            vector<Patient> facilityB;
+            vector<Patient> facilityC;
 
-// Dataset Summary
-case 11:
-    cout << "\nThis feature is not implemented yet.\n";
-    break;
+            loadDataset("datasets/dataset1_facility_a.csv", facilityA);
+            loadDataset("datasets/dataset2_facility_b.csv", facilityB);
+            loadDataset("datasets/dataset3_facility_c.csv", facilityC);
 
-// Performance Summary
-case 12:
-    cout << "\nThis feature is not implemented yet.\n";
-    break;
+            cout << "\n========== TOTAL BILLING COST (PER FACILITY) ==========\n";
 
-case 13:
-    cout << "\nExiting Array implementation...\n";
-    break;
+            // Facility A
+            billingAnalysis(facilityA, "FACILITY A");
 
-default:
-    cout << "\nInvalid choice. Please try again.\n";
-}
-    } while (choice != 13);
+            // Facility B
+            billingAnalysis(facilityB, "FACILITY B");
 
-    return 0;
-}
+            // Facility C
+            billingAnalysis(facilityC, "FACILITY C");
+
+            // Combine all facilities
+            vector<Patient> combined = facilityA;
+
+            combined.insert(
+                combined.end(),
+                facilityB.begin(),
+                facilityB.end()
+            );
+
+            combined.insert(
+                combined.end(),
+                facilityC.begin(),
+                facilityC.end()
+            );
+
+            // Combined total
+            billingAnalysis(combined, "ALL FACILITIES");
+
+            break;
+        }
+
+        // Dataset Summary
+        case 11:
+            cout << "\nThis feature is not implemented yet.\n";
+            break;
+
+        // Performance Summary
+        case 12:
+            cout << "\nThis feature is not implemented yet.\n";
+            break;
+
+        case 13:
+            cout << "\nExiting Array implementation...\n";
+            break;
+
+        default:
+            cout << "\nInvalid choice. Please try again.\n";
+        }
+            } while (choice != 13);
+
+            return 0;
+        }
