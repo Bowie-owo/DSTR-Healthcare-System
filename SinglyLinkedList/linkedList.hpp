@@ -145,6 +145,10 @@ public:
         return head;
     }
 
+    Node*& getHead() {
+        return head;
+    }
+
     void display() {
 
         Node* current = head;
