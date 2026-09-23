@@ -70,4 +70,30 @@ void bubbleSortByVisitDuration(LinkedList& list) {
     } while (swapped);
 }
 
+// Contract: sorts 'list' in place, ascending by care type.
+void bubbleSortByCareType(LinkedList& list) {
+
+    if (list.getHead() == nullptr) return;
+
+    bool swapped;
+
+    do {
+        swapped = false;
+        Node* current = const_cast<Node*>(list.getHead());
+
+        while (current != nullptr && current->next != nullptr) {
+
+            if (current->data.careType > current->next->data.careType) {
+                Patient temp = current->data;
+                current->data = current->next->data;
+                current->next->data = temp;
+                swapped = true;
+            }
+
+            current = current->next;
+        }
+
+    } while (swapped);
+}
+
 #endif
