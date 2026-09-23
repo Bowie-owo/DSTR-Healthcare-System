@@ -8,7 +8,7 @@
 #include "patient.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "billingAnalysis.hpp"
-#include "lengthOfStay.hpp"
+#include "careTypeAnalysis.hpp"
 
 using namespace std;
 
@@ -23,15 +23,14 @@ void displayMenu() {
 	cout << "2. Load and Display Facility B\n";
 	cout << "3. Load and Display Facility C\n";
 	cout << "4. Load and Display All Datasets\n";
-	cout << "5.  Sorting (will further decide how to do)\n";
+	cout << "5. Sorting (will further decide how to do)\n";
 	cout << "6. Searching(will further decide how to do)\n";
-	cout << "7. Length of Stay Analysis (per facility+combined) - jiahuey\n";
+	cout << "7. Care Type Analysis (per facility+combined) - jiahuey\n";
 	cout << "8. Age Group Analysis(per facility+combined) - sinyi\n";
-	cout << "9. Care Type Analysis(per facility+combined) - jiahuey\n";
-	cout << "10. Total Billing Cost(per facility+combined) - sinyi\n";
-    cout << "11. Dataset Summary - jiahuey \n";
-    cout << "12. Performance Summary (Comparison View) - sinyi\n";
-    cout << "13. Exit\n";
+	cout << "9. Total Billing Cost(per facility+combined) - sinyi\n";
+    cout << "10. Dataset Summary - jiahuey \n";
+    cout << "11. Performance Summary (Comparison View) - sinyi\n";
+    cout << "12. Exit\n";
 	cout << "================================================\n";
 	cout << "Enter your choice: ";
 }
@@ -146,7 +145,7 @@ int main() {
             cout << "\nThis feature is not implemented yet.\n";
             break;
 
-        // Length of Stay Analysis
+        // Care Type Analysis
         case 7:
         {
             vector<Patient> facilityA;
@@ -157,16 +156,16 @@ int main() {
             loadDataset("datasets/dataset2_facility_b.csv", facilityB);
             loadDataset("datasets/dataset3_facility_c.csv", facilityC);
 
-            cout << "\n========== LENGTH OF STAY ANALYSIS (PER FACILITY) ==========\n";
+            cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
 
             // Facility A
-            lengthOfStayAnalysis(facilityA, "FACILITY A");
+            careTypeAnalysis(facilityA, "FACILITY A");
 
             // Facility B
-            lengthOfStayAnalysis(facilityB, "FACILITY B");
+            careTypeAnalysis(facilityB, "FACILITY B");
 
             // Facility C
-            lengthOfStayAnalysis(facilityC, "FACILITY C");
+            careTypeAnalysis(facilityC, "FACILITY C");
 
             // Combine all facilities
             vector<Patient> combined = facilityA;
@@ -184,7 +183,7 @@ int main() {
             );
 
             // Combined analysis
-            lengthOfStayAnalysis(combined, "ALL FACILITIES");
+            careTypeAnalysis(combined, "ALL FACILITIES");
 
             break;
         }
@@ -228,13 +227,9 @@ int main() {
             break;
         }
 
-        // Care Type Analysis
-        case 9:
-            cout << "\nThis feature is not implemented yet.\n";
-            break;
 
         // Total Billing Cost
-        case 10:
+        case 9:
         {
             vector<Patient> facilityA;
             vector<Patient> facilityB;
@@ -277,23 +272,23 @@ int main() {
         }
 
         // Dataset Summary
-        case 11:
+        case 10:
             cout << "\nThis feature is not implemented yet.\n";
             break;
 
         // Performance Summary
-        case 12:
+        case 11:
             cout << "\nThis feature is not implemented yet.\n";
             break;
 
-        case 13:
+        case 12:
             cout << "\nExiting Array implementation...\n";
             break;
 
         default:
             cout << "\nInvalid choice. Please try again.\n";
         }
-            } while (choice != 13);
+            } while (choice != 12);
 
             return 0;
         }
