@@ -1,19 +1,19 @@
-#ifndef SEARCHING_HPP
-#define SEARCHING_HPP
+#ifndef SORTING_HPP
+#define SORTING_HPP
 
 #include <iostream>
 #include <vector>
 #include "patient.hpp"
-#include "linearSearch.hpp"
 
 using namespace std;
 
-void searchingMenu(
+void sortingMenu(
     vector<Patient>& facilityA,
     vector<Patient>& facilityB,
     vector<Patient>& facilityC,
     vector<Patient>& combined
 )
+
 {
     int choice;
 
@@ -21,11 +21,12 @@ void searchingMenu(
     {
         cout << "\n";
         cout << "================================================\n";
-        cout << "              SEARCHING MENU\n";
+        cout << "              SORTING MENU\n";
         cout << "================================================\n";
-        cout << "1. Linear Search\n";
-        cout << "2. Binary Search\n";
-        cout << "3. Back to Main Menu\n";
+        cout << "1. Bubble Sort\n";
+        cout << "2. Quick Sort\n";
+        cout << "3. Insertion Sort\n";
+        cout << "4. Back to Main Menu\n";
         cout << "================================================\n";
         cout << "Enter your choice: ";
         cin >> choice;
@@ -33,21 +34,18 @@ void searchingMenu(
         switch (choice)
         {
             case 1:
-                linearSearchMenu(
-                    facilityA,
-                    facilityB,
-                    facilityC,
-                    combined
-                );
+                cout << "\nThis feature is not implemented yet.\n";
                 break;
 
             case 2:
-                // Binary Search menu will be added later
-                cout << "\nBinary Search selected.\n";
-                system("pause");
-                break;
+                cout << "\nThis feature is not implemented yet.\n";
+            break;
 
             case 3:
+                cout << "\nThis feature is not implemented yet.\n";
+                break;
+
+            case 4:
                 cout << "\nReturning to Main Menu...\n";
                 break;
 
@@ -56,7 +54,7 @@ void searchingMenu(
                 system("pause");
         }
 
-    } while (choice != 3);
+    } while (choice != 4);
 }
 
 #endif

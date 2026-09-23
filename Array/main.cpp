@@ -10,6 +10,8 @@
 #include "billingAnalysis.hpp"
 #include "careTypeAnalysis.hpp"
 #include "searching.hpp"
+#include "sorting.hpp"
+#include "analysis.hpp"
 
 using namespace std;
 
@@ -24,14 +26,12 @@ void displayMenu() {
 	cout << "2. Load and Display Facility B\n";
 	cout << "3. Load and Display Facility C\n";
 	cout << "4. Load and Display All Datasets\n";
-	cout << "5. Sorting (will further decide how to do)\n";
-	cout << "6. Searching(will further decide how to do)\n";
-	cout << "7. Care Type Analysis (per facility+combined) - jiahuey\n";
-	cout << "8. Age Group Analysis(per facility+combined) - sinyi\n";
-	cout << "9. Total Billing Cost(per facility+combined) - sinyi\n";
-    cout << "10. Dataset Summary - jiahuey \n";
-    cout << "11. Performance Summary (Comparison View) - sinyi\n";
-    cout << "12. Exit\n";
+	cout << "5. Sorting\n";
+	cout << "6. Searching\n";
+	cout << "7. Analysis\n";
+    cout << "8. Dataset Summary - jiahuey \n";
+    cout << "9. Performance Summary (Comparison View) - sinyi\n";
+    cout << "10. Exit\n";
 	cout << "================================================\n";
 	cout << "Enter your choice: ";
 }
@@ -138,8 +138,33 @@ int main() {
 
         // Sorting
         case 5:
-            cout << "\nThis feature is not implemented yet.\n";
+        {
+            vector<Patient> facilityA;
+            vector<Patient> facilityB;
+            vector<Patient> facilityC;
+
+            loadDataset("datasets/dataset1_facility_a.csv", facilityA);
+            loadDataset("datasets/dataset2_facility_b.csv", facilityB);
+            loadDataset("datasets/dataset3_facility_c.csv", facilityC);
+
+            vector<Patient> combined = facilityA;
+
+            combined.insert(
+                combined.end(),
+                facilityB.begin(),
+                facilityB.end()
+            );
+
+            combined.insert(
+                combined.end(),
+                facilityC.begin(),
+                facilityC.end()
+            );
+
+            sortingMenu(facilityA, facilityB, facilityC, combined);
+
             break;
+        }
 
         // Searching
         case 6:
@@ -171,7 +196,7 @@ int main() {
             break;
         }
 
-        // Care Type Analysis
+        // Analysis
         case 7:
         {
             vector<Patient> facilityA;
@@ -182,18 +207,6 @@ int main() {
             loadDataset("datasets/dataset2_facility_b.csv", facilityB);
             loadDataset("datasets/dataset3_facility_c.csv", facilityC);
 
-            cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
-
-            // Facility A
-            careTypeAnalysis(facilityA, "FACILITY A");
-
-            // Facility B
-            careTypeAnalysis(facilityB, "FACILITY B");
-
-            // Facility C
-            careTypeAnalysis(facilityC, "FACILITY C");
-
-            // Combine all facilities
             vector<Patient> combined = facilityA;
 
             combined.insert(
@@ -208,113 +221,29 @@ int main() {
                 facilityC.end()
             );
 
-            // Combined analysis
-            careTypeAnalysis(combined, "ALL FACILITIES");
-
-            break;
-        }
-
-        // AGE GROUP ANALYSIS
-        case 8:
-        {
-            vector<Patient> facilityA;
-            vector<Patient> facilityB;
-            vector<Patient> facilityC;
-
-            loadDataset("datasets/dataset1_facility_a.csv", facilityA);
-            loadDataset("datasets/dataset2_facility_b.csv", facilityB);
-            loadDataset("datasets/dataset3_facility_c.csv", facilityC);
-
-            cout << "\n========== AGE GROUP ANALYSIS (PER FACILITY) ==========\n";
-
-            ageGroupAnalysis(facilityA, "FACILITY A");
-
-            ageGroupAnalysis(facilityB, "FACILITY B");
-
-            ageGroupAnalysis(facilityC, "FACILITY C");
-
-            // Combine all three datasets
-            vector<Patient> combined = facilityA;
-
-            combined.insert(
-                combined.end(),
-                facilityB.begin(),
-                facilityB.end()
-            );
-
-            combined.insert(
-                combined.end(),
-                facilityC.begin(),
-                facilityC.end()
-            );
-
-            ageGroupAnalysis(combined, "COMBINED (ALL FACILITIES)");
-
-            break;
-        }
-
-
-        // Total Billing Cost
-        case 9:
-        {
-            vector<Patient> facilityA;
-            vector<Patient> facilityB;
-            vector<Patient> facilityC;
-
-            loadDataset("datasets/dataset1_facility_a.csv", facilityA);
-            loadDataset("datasets/dataset2_facility_b.csv", facilityB);
-            loadDataset("datasets/dataset3_facility_c.csv", facilityC);
-
-            cout << "\n========== TOTAL BILLING COST (PER FACILITY) ==========\n";
-
-            // Facility A
-            billingAnalysis(facilityA, "FACILITY A");
-
-            // Facility B
-            billingAnalysis(facilityB, "FACILITY B");
-
-            // Facility C
-            billingAnalysis(facilityC, "FACILITY C");
-
-            // Combine all facilities
-            vector<Patient> combined = facilityA;
-
-            combined.insert(
-                combined.end(),
-                facilityB.begin(),
-                facilityB.end()
-            );
-
-            combined.insert(
-                combined.end(),
-                facilityC.begin(),
-                facilityC.end()
-            );
-
-            // Combined total
-            billingAnalysis(combined, "ALL FACILITIES");
+            analysisMenu(facilityA, facilityB, facilityC, combined);
 
             break;
         }
 
         // Dataset Summary
-        case 10:
+        case 8:
             cout << "\nThis feature is not implemented yet.\n";
             break;
 
         // Performance Summary
-        case 11:
+        case 9:
             cout << "\nThis feature is not implemented yet.\n";
             break;
 
-        case 12:
+        case 10:
             cout << "\nExiting Array implementation...\n";
             break;
 
         default:
             cout << "\nInvalid choice. Please try again.\n";
         }
-            } while (choice != 12);
+            } while (choice != 10);
 
             return 0;
             
