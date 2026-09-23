@@ -8,13 +8,8 @@
 #include "patient.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "billingAnalysis.hpp"
-<<<<<<< HEAD
 #include "careTypeAnalysis.hpp"
-=======
-#include "lengthOfStay.hpp"
 #include "searching.hpp"
-
->>>>>>> be60a1708cc3ed3ab7aada61b1a7df8a49c09ce9
 
 using namespace std;
 
