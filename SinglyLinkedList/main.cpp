@@ -2,6 +2,7 @@
 #include <chrono>
 #include "linkedList.hpp"
 #include "bubbleSort.hpp"
+#include "binarySearch.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "careTypeAnalysis.hpp"
 #include "billingAnalysis.hpp"
@@ -20,14 +21,85 @@ void displayMenu() {
     cout << "3. Load and Display Facility C\n";
     cout << "4. Load and Display All Datasets\n";
     cout << "5. Sort (Bubble Sort)\n";
-    cout << "6. Age Group Analysis\n";
-    cout << "7. Care Type Analysis (Per Facility)\n";
-    cout << "8. Total Billing Cost (Per Facility)\n";
-    cout << "9. Dataset Summary (Per Facility)\n";
-    cout << "10. Combined Analysis (All Facilities)\n";
-    cout << "11. Exit\n";
+    cout << "6. Binary Search (Age Group / Care Type)\n";
+    cout << "7. Age Group Analysis\n";
+    cout << "8. Care Type Analysis (Per Facility)\n";
+    cout << "9. Total Billing Cost (Per Facility)\n";
+    cout << "10. Dataset Summary (Per Facility)\n";
+    cout << "11. Combined Analysis (All Facilities)\n";
+    cout << "12. Exit\n";
     cout << "================================================\n";
     cout << "Enter your choice: ";
+}
+
+void searchList(LinkedList& target) {
+    cout << "\nSearch by which field?\n";
+    cout << "1. Age Group\n";
+    cout << "2. Care Type\n";
+    cout << "Enter your choice: ";
+
+    int searchField;
+    cin >> searchField;
+
+    if (searchField != 1 && searchField != 2) {
+        cout << "\nInvalid choice.\n";
+        return;
+    }
+
+    int matches = 0;
+    auto searchStart = chrono::high_resolution_clock::now();
+
+    if (searchField == 1) {
+        cout << "\nAge groups:\n"
+             << "1. 0-17: Pediatrics & Adolescents\n"
+             << "2. 18-25: Young Adults / University Students\n"
+             << "3. 26-45: Working Adults (Early Career)\n"
+             << "4. 46-60: Working Adults (Late Career)\n"
+             << "5. 61-100: Senior Citizens / Geriatric Care\n"
+             << "Enter your choice: ";
+
+        int groupChoice;
+        cin >> groupChoice;
+        const int minimumAges[] = {0, 18, 26, 46, 61};
+        const int maximumAges[] = {17, 25, 45, 60, 100};
+
+        if (groupChoice < 1 || groupChoice > 5) {
+            cout << "\nInvalid age group.\n";
+            return;
+        }
+
+        // Option 5 may already have sorted by age; sorting again is harmless.
+        bubbleSortByAge(target);
+        matches = displayPatientsInAgeGroup(
+            target, minimumAges[groupChoice - 1], maximumAges[groupChoice - 1]);
+    }
+    else {
+        cout << "\nCare types:\n"
+             << "1. Emergency\n2. Inpatient\n3. Outpatient\n"
+             << "4. Rehabilitation\n5. Routine checkup\n6. Vaccination\n"
+             << "Enter your choice: ";
+
+        int careChoice;
+        cin >> careChoice;
+        const string careTypes[] = {
+            "Emergency", "Inpatient", "Outpatient",
+            "Rehabilitation", "Routine Checkup", "Vaccination"
+        };
+
+        if (careChoice < 1 || careChoice > 6) {
+            cout << "\nInvalid care type.\n";
+            return;
+        }
+
+        bubbleSortByCareType(target);
+        matches = displayPatientsByCareType(target, careTypes[careChoice - 1]);
+    }
+
+    auto searchEnd = chrono::high_resolution_clock::now();
+    double searchMs = chrono::duration<double, milli>(searchEnd - searchStart).count();
+
+    cout << "\nBinary search found " << matches << " matching patient(s).\n";
+    cout << "Search time: " << searchMs << " ms  (n = " << target.getSize() << ")\n";
 }
 
 int main() {
@@ -176,10 +248,56 @@ int main() {
             cout << "Sort time: " << ms << " ms  (n = " << target->getSize() << ")\n";
             target->display();
 
+            cout << "\nWould you like to search this sorted dataset now? (y/n): ";
+            char searchNow;
+            cin >> searchNow;
+            if (searchNow == 'y' || searchNow == 'Y') {
+                searchList(*target);
+            }
+
             break;
         }
 
         case 6: {
+            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
+                cout << "\nPlease load a dataset first.\n";
+                break;
+            }
+
+            cout << "\n---------- Binary Search ----------\n";
+
+            cout << "\nWhich dataset would you like to search?\n";
+            cout << "1. Facility A\n";
+            cout << "2. Facility B\n";
+            cout << "3. Facility C\n";
+            cout << "4. Combined (All Facilities)\n";
+            cout << "Enter your choice: ";
+
+            int searchChoice;
+            cin >> searchChoice;
+            LinkedList* target = nullptr;
+
+            if (searchChoice == 1 && facilityALoaded) target = &facilityA;
+            else if (searchChoice == 2 && facilityBLoaded) target = &facilityB;
+            else if (searchChoice == 3 && facilityCLoaded) target = &facilityC;
+            else if (searchChoice == 4) {
+                combined.clear();
+                if (facilityALoaded) combined.appendAll(facilityA);
+                if (facilityBLoaded) combined.appendAll(facilityB);
+                if (facilityCLoaded) combined.appendAll(facilityC);
+                target = &combined;
+            }
+
+            if (target == nullptr) {
+                cout << "\nInvalid choice or dataset is not loaded.\n";
+                break;
+            }
+
+            searchList(*target);
+            break;
+        }
+
+        case 7: {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
                 cout << "\nPlease load a dataset first.\n";
                 break;
@@ -207,7 +325,7 @@ int main() {
             break;
         }
 
-        case 7:
+        case 8:
             cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
             if (facilityALoaded) { cout << "\nFACILITY A\n"; careTypeAnalysis(facilityA); }
             if (facilityBLoaded) { cout << "\nFACILITY B\n"; careTypeAnalysis(facilityB); }
@@ -215,7 +333,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 8:
+        case 9:
             cout << "\n========== TOTAL BILLING COST (PER FACILITY) ==========\n";
             if (facilityALoaded) displayTotalBillingCost(facilityA, "FACILITY A");
             if (facilityBLoaded) displayTotalBillingCost(facilityB, "FACILITY B");
@@ -223,7 +341,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 9:
+        case 10:
             cout << "\n========== DATASET SUMMARY (PER FACILITY) ==========\n";
             if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
             if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
@@ -231,7 +349,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 10:
+        case 11:
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
                 cout << "\nPlease load at least one dataset first.\n";
                 break;
@@ -258,7 +376,7 @@ int main() {
             displayDatasetSummary(combined, "COMBINED (ALL FACILITIES)");
             break;
 
-        case 11:
+        case 12:
             cout << "\nExiting MetroHealth System...\n";
             break;
 
@@ -268,7 +386,7 @@ int main() {
 
         cout << "\n\n\n\n\n";
 
-    } while (choice != 11);
+    } while (choice != 12);
 
     return 0;
 }
