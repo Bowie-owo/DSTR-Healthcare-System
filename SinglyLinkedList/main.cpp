@@ -2,6 +2,7 @@
 #include <chrono>
 #include "linkedList.hpp"
 #include "bubbleSort.hpp"
+#include "insertionSort.hpp"
 #include "binarySearch.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "careTypeAnalysis.hpp"
@@ -21,13 +22,12 @@ void displayMenu() {
     cout << "3. Load and Display Facility C\n";
     cout << "4. Load and Display All Datasets\n";
     cout << "5. Sort (Bubble Sort)\n";
-    cout << "6. Binary Search (Age Group / Care Type)\n";
-    cout << "7. Age Group Analysis\n";
-    cout << "8. Care Type Analysis (Per Facility)\n";
-    cout << "9. Total Billing Cost (Per Facility)\n";
-    cout << "10. Dataset Summary (Per Facility)\n";
-    cout << "11. Combined Analysis (All Facilities)\n";
-    cout << "12. Exit\n";
+    cout << "6. Age Group Analysis\n";
+    cout << "7. Care Type Analysis (Per Facility)\n";
+    cout << "8. Total Billing Cost (Per Facility)\n";
+    cout << "9. Dataset Summary (Per Facility)\n";
+    cout << "10. Combined Analysis (All Facilities)\n";
+    cout << "11. Exit\n";
     cout << "================================================\n";
     cout << "Enter your choice: ";
 }
@@ -259,45 +259,6 @@ int main() {
         }
 
         case 6: {
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
-                cout << "\nPlease load a dataset first.\n";
-                break;
-            }
-
-            cout << "\n---------- Binary Search ----------\n";
-
-            cout << "\nWhich dataset would you like to search?\n";
-            cout << "1. Facility A\n";
-            cout << "2. Facility B\n";
-            cout << "3. Facility C\n";
-            cout << "4. Combined (All Facilities)\n";
-            cout << "Enter your choice: ";
-
-            int searchChoice;
-            cin >> searchChoice;
-            LinkedList* target = nullptr;
-
-            if (searchChoice == 1 && facilityALoaded) target = &facilityA;
-            else if (searchChoice == 2 && facilityBLoaded) target = &facilityB;
-            else if (searchChoice == 3 && facilityCLoaded) target = &facilityC;
-            else if (searchChoice == 4) {
-                combined.clear();
-                if (facilityALoaded) combined.appendAll(facilityA);
-                if (facilityBLoaded) combined.appendAll(facilityB);
-                if (facilityCLoaded) combined.appendAll(facilityC);
-                target = &combined;
-            }
-
-            if (target == nullptr) {
-                cout << "\nInvalid choice or dataset is not loaded.\n";
-                break;
-            }
-
-            searchList(*target);
-            break;
-        }
-
-        case 7: {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
                 cout << "\nPlease load a dataset first.\n";
                 break;
