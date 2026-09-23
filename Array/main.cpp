@@ -9,6 +9,8 @@
 #include "ageGroupAnalysis.hpp"
 #include "billingAnalysis.hpp"
 #include "lengthOfStay.hpp"
+#include "searching.hpp"
+
 
 using namespace std;
 
@@ -143,8 +145,33 @@ int main() {
 
         // Searching
         case 6:
-            cout << "\nThis feature is not implemented yet.\n";
+        {
+            vector<Patient> facilityA;
+            vector<Patient> facilityB;
+            vector<Patient> facilityC;
+
+            loadDataset("datasets/dataset1_facility_a.csv", facilityA);
+            loadDataset("datasets/dataset2_facility_b.csv", facilityB);
+            loadDataset("datasets/dataset3_facility_c.csv", facilityC);
+
+            vector<Patient> combined = facilityA;
+
+            combined.insert(
+                combined.end(),
+                facilityB.begin(),
+                facilityB.end()
+            );
+
+            combined.insert(
+                combined.end(),
+                facilityC.begin(),
+                facilityC.end()
+            );
+
+            searchingMenu(facilityA, facilityB, facilityC, combined);
+
             break;
+        }
 
         // Length of Stay Analysis
         case 7:
@@ -296,4 +323,5 @@ int main() {
             } while (choice != 13);
 
             return 0;
+            
         }
