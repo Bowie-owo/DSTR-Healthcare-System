@@ -8,6 +8,7 @@
 #include "patient.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "billingAnalysis.hpp"
+#include "lengthOfStay.hpp"
 
 using namespace std;
 
@@ -147,8 +148,46 @@ int main() {
 
         // Length of Stay Analysis
         case 7:
-            cout << "\nThis feature is not implemented yet.\n";
+        {
+            vector<Patient> facilityA;
+            vector<Patient> facilityB;
+            vector<Patient> facilityC;
+
+            loadDataset("datasets/dataset1_facility_a.csv", facilityA);
+            loadDataset("datasets/dataset2_facility_b.csv", facilityB);
+            loadDataset("datasets/dataset3_facility_c.csv", facilityC);
+
+            cout << "\n========== LENGTH OF STAY ANALYSIS (PER FACILITY) ==========\n";
+
+            // Facility A
+            lengthOfStayAnalysis(facilityA, "FACILITY A");
+
+            // Facility B
+            lengthOfStayAnalysis(facilityB, "FACILITY B");
+
+            // Facility C
+            lengthOfStayAnalysis(facilityC, "FACILITY C");
+
+            // Combine all facilities
+            vector<Patient> combined = facilityA;
+
+            combined.insert(
+                combined.end(),
+                facilityB.begin(),
+                facilityB.end()
+            );
+
+            combined.insert(
+                combined.end(),
+                facilityC.begin(),
+                facilityC.end()
+            );
+
+            // Combined analysis
+            lengthOfStayAnalysis(combined, "ALL FACILITIES");
+
             break;
+        }
 
         // AGE GROUP ANALYSIS
         case 8:
