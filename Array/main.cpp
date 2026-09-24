@@ -106,6 +106,78 @@ void loadAndDisplayFacility(const string& filename, const string& facilityName) 
     }
 }
 
+void displayFacilitySummary(const vector<Patient>& patients, const string& facilityName) {
+    const string line(80, '=');
+
+    double totalStayHours = 0.0;
+    double totalMedicalCost = 0.0;
+
+    // Care types found in this facility, with a patient count for each
+    vector<string> careTypes;
+    vector<int> careTypeCounts;
+
+    for (const Patient& patient : patients) {
+        totalStayHours += patient.lengthOfStay * patient.daysVisitsPerYear;
+        totalMedicalCost += patient.lengthOfStay * patient.baseCostPerHour * patient.daysVisitsPerYear;
+
+        bool found = false;
+        for (size_t i = 0; i < careTypes.size(); i++) {
+            if (careTypes[i] == patient.careType) {
+                careTypeCounts[i]++;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            careTypes.push_back(patient.careType);
+            careTypeCounts.push_back(1);
+        }
+    }
+
+    int ageCounts[NUM_AGE_GROUPS];
+    int outOfRange = countAgeGroups(patients, ageCounts);
+
+    cout << "\n" << line << "\n";
+    cout << "                   DATASET SUMMARY - " << facilityName << "\n";
+    cout << line << "\n";
+
+    cout << left << setw(28) << "Total Patients"
+         << ": " << patients.size() << "\n";
+    cout << left << setw(28) << "Total Stay Hours"
+         << ": " << defaultfloat << setprecision(6) << totalStayHours << " hrs\n";
+    cout << left << setw(28) << "Total Medical Cost"
+         << ": RM " << fixed << setprecision(2) << totalMedicalCost << "\n";
+
+    cout << "\nAge Groups Present:\n";
+    bool anyAgeGroup = false;
+    for (int i = 0; i < NUM_AGE_GROUPS; i++) {
+        if (ageCounts[i] > 0) {
+            cout << "  - " << left << setw(38)
+                 << getAgeGroupName(i) << ageCounts[i] << " patients\n";
+            anyAgeGroup = true;
+        }
+    }
+    if (outOfRange > 0) {
+        cout << "  - " << left << setw(38) << "Unknown / Out of range"
+             << outOfRange << " patients\n";
+        anyAgeGroup = true;
+    }
+    if (!anyAgeGroup) {
+        cout << "  (none)\n";
+    }
+
+    cout << "\nCare Types Available:\n";
+    if (careTypes.empty()) {
+        cout << "  (none)\n";
+    }
+    for (size_t i = 0; i < careTypes.size(); i++) {
+        cout << "  - " << left << setw(38) << careTypes[i]
+             << careTypeCounts[i] << " patients\n";
+    }
+
+    cout << line << "\n";
+}
+
 int main() {
 
     int choice = 0;
@@ -229,8 +301,31 @@ int main() {
 
         // Dataset Summary
         case 8:
-            cout << "\nThis feature is not implemented yet.\n";
+        {
+            vector<Patient> facilityA;
+            vector<Patient> facilityB;
+            vector<Patient> facilityC;
+
+            bool okA = loadDataset("datasets/dataset1_facility_a.csv", facilityA);
+            bool okB = loadDataset("datasets/dataset2_facility_b.csv", facilityB);
+            bool okC = loadDataset("datasets/dataset3_facility_c.csv", facilityC);
+
+            if (!okA || !okB || !okC) {
+                cout << "\nSummary cancelled: one or more datasets failed to load.\n";
+                break;
+            }
+
+            vector<Patient> combined = facilityA;
+            combined.insert(combined.end(), facilityB.begin(), facilityB.end());
+            combined.insert(combined.end(), facilityC.begin(), facilityC.end());
+
+            displayFacilitySummary(facilityA, "FACILITY A");
+            displayFacilitySummary(facilityB, "FACILITY B");
+            displayFacilitySummary(facilityC, "FACILITY C");
+            displayFacilitySummary(combined, "COMBINED (A + B + C)");
+
             break;
+        }
 
         // Performance Summary
         case 9:
