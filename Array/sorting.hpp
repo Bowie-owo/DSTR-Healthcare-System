@@ -4,9 +4,14 @@
 #include <iostream>
 #include <vector>
 #include <chrono>
+#include <iomanip>
+#include <string>
 #include "patient.hpp"
+#include "array.hpp"
+#include "searching.hpp"
 #include "quickSort.hpp"
 #include "insertionSort.hpp"
+
 
 using namespace std;
 
@@ -44,7 +49,6 @@ void sortingMenu(
             case 2:
             {
                 cout << "\n---------- Sort (Quick Sort) ----------\n";
-
                 cout << "Sort by which field?\n";
                 cout << "1. Age\n";
                 cout << "2. Visit Duration (Length of Stay)\n";
@@ -59,7 +63,6 @@ void sortingMenu(
                     break;
                 }
 
-
                 cout << "\nWhich dataset would you like to sort?\n";
                 cout << "1. Facility A\n";
                 cout << "2. Facility B\n";
@@ -70,10 +73,8 @@ void sortingMenu(
                 int sortChoice;
                 cin >> sortChoice;
 
-
                 vector<Patient>* target = nullptr;
                 string label;
-
 
                 if (sortChoice == 1)
                 {
@@ -93,25 +94,9 @@ void sortingMenu(
                 else if (sortChoice == 4)
                 {
                     combined.clear();
-
-                    combined.insert(
-                        combined.end(),
-                        facilityA.begin(),
-                        facilityA.end()
-                    );
-
-                    combined.insert(
-                        combined.end(),
-                        facilityB.begin(),
-                        facilityB.end()
-                    );
-
-                    combined.insert(
-                        combined.end(),
-                        facilityC.begin(),
-                        facilityC.end()
-                    );
-
+                    combined.insert(combined.end(), facilityA.begin(), facilityA.end());
+                    combined.insert(combined.end(), facilityB.begin(), facilityB.end());
+                    combined.insert(combined.end(), facilityC.begin(), facilityC.end());
                     target = &combined;
                     label = "COMBINED (ALL FACILITIES)";
                 }
@@ -121,115 +106,40 @@ void sortingMenu(
                     break;
                 }
 
-
                 if (target->empty())
                 {
                     cout << "\nSelected dataset is empty.\n";
                     break;
                 }
 
+                string fieldLabel = (fieldChoice == 1) ? "Age" : "Visit Duration";
+                int last = static_cast<int>(target->size()) - 1;
 
-                // ==================================
-                // PERFORM QUICK SORT
-                // ==================================
-
+                auto start = chrono::high_resolution_clock::now();
                 if (fieldChoice == 1)
                 {
-                    auto start = chrono::high_resolution_clock::now();
-
-                    quickSortByAge(
-                        *target,
-                        0,
-                        static_cast<int>(target->size()) - 1
-                    );
-
-                    auto end = chrono::high_resolution_clock::now();
-
-                    double sortTime =
-                        chrono::duration<double, milli>(end - start).count();
-
-                    cout << "\n"
-                        << label
-                        << " sorted by Age (ascending).\n";
-
-                    cout << "Sort time: "
-                        << fixed
-                        << setprecision(6)
-                        << sortTime
-                        << " ms\n";
+                    quickSortByAge(*target, 0, last);
                 }
                 else
                 {
-                    auto start = chrono::high_resolution_clock::now();
-
-                    quickSortByVisitDuration(
-                        *target,
-                        0,
-                        static_cast<int>(target->size()) - 1
-                    );
-
-                    auto end = chrono::high_resolution_clock::now();
-
-                    double sortTime =
-                        chrono::duration<double, milli>(end - start).count();
-
-                    cout << "\n"
-                        << label
-                        << " sorted by Visit Duration (ascending).\n";
-
-                    cout << "Sort time: "
-                        << fixed
-                        << setprecision(6)
-                        << sortTime
-                        << " ms\n";
+                    quickSortByVisitDuration(*target, 0, last);
                 }
-
-                cout << "\n";
-
-                cout << left
-                     << setw(12) << "Patient ID"
-                     << setw(8) << "Age"
-                     << setw(20) << "Care Type"
-                     << setw(15) << "Stay(hr)"
-                     << setw(15) << "Cost/hr"
-                     << setw(12) << "Visits/Year"
-                     << endl;
-
-                cout << string(82, '-') << endl;
+                auto end = chrono::high_resolution_clock::now();
+                double sortTime = chrono::duration<double, milli>(end - start).count();
 
 
-                for (const Patient& patient : *target)
+                cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
+                cout << "Sort time: " << fixed << setprecision(6) << sortTime
+                     << " ms  (n = " << target->size() << ")\n";
+                display(*target);
+
+                cout << "\nWould you like to search this sorted dataset now? (y/n): ";
+                char searchNow;
+                cin >> searchNow;
+                if (searchNow == 'y' || searchNow == 'Y')
                 {
-                    cout << left
-                         << setw(12)
-                         << patient.patientID
-
-                         << setw(8)
-                         << patient.age
-
-                         << setw(20)
-                         << patient.careType
-
-                         << setw(15)
-                         << fixed
-                         << setprecision(2)
-                         << patient.lengthOfStay
-
-                         << setw(15)
-                         << fixed
-                         << setprecision(2)
-                         << patient.baseCostPerHour
-
-                         << setw(12)
-                         << patient.daysVisitsPerYear
-
-                         << endl;
+                    searchingMenu(facilityA, facilityB, facilityC, combined);
                 }
-
-
-                cout << "\nTotal patients: "
-                     << target->size()
-                     << endl;
 
                 break;
             }
