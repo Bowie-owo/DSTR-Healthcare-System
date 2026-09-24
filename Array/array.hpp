@@ -17,8 +17,8 @@ inline void display(const vector<Patient>& patients)
          << setw(12) << "Patient ID"
          << setw(8)  << "Age"
          << setw(18) << "Care Type"
-         << setw(12) << "Stay(hr)"
-         << setw(12) << "Cost/hr"
+         << setw(12) << "Stay(hour)"
+         << setw(12) << "Cost/hr(RM)"
          << setw(12) << "Visits/Year"
          << endl;
     cout << "================================================================================\n";
@@ -28,11 +28,10 @@ inline void display(const vector<Patient>& patients)
         cout << left
              << setw(12) << patient.patientID
              << setw(8)  << patient.age
-             << setw(18) << patient.careType
-             << setw(12) << patient.lengthOfStay
-             << setw(12) << fixed << setprecision(2)
-             << patient.baseCostPerHour
-             << setw(12) << patient.daysVisitsPerYear
+             << setw(18) << patient.careType;
+        cout << defaultfloat <<setprecision(6) << setw(12) << patient.lengthOfStay;
+        cout << setw(12) << fixed << setprecision(2) << patient.baseCostPerHour;
+        cout << defaultfloat << setw(12) << patient.daysVisitsPerYear
              << endl;
     }
 
