@@ -6,6 +6,7 @@
 #include <chrono>
 #include "patient.hpp"
 #include "quickSort.hpp"
+#include "insertionSort.hpp"
 
 using namespace std;
 
@@ -234,8 +235,112 @@ void sortingMenu(
             }
 
             case 3:
-                cout << "\nThis feature is not implemented yet.\n";
+            {
+                cout << "\n---------- Sort (Insertion Sort) ----------\n";
+                cout << "Sort by which field?\n";
+                cout << "1. Age\n";
+                cout << "2. Visit Duration (Length of Stay)\n";
+                cout << "Enter your choice: ";
+
+                int fieldChoice;
+                cin >> fieldChoice;
+
+                if (fieldChoice != 1 && fieldChoice != 2)
+                {
+                    cout << "\nInvalid choice.\n";
+                    break;
+                }
+
+                cout << "\nWhich dataset would you like to sort?\n";
+                cout << "1. Facility A\n";
+                cout << "2. Facility B\n";
+                cout << "3. Facility C\n";
+                cout << "4. Combined (All Facilities)\n";
+                cout << "Enter your choice: ";
+
+                int sortChoice;
+                cin >> sortChoice;
+
+                vector<Patient>* target = nullptr;
+                string label;
+
+                if (sortChoice == 1)
+                {
+                    target = &facilityA;
+                    label = "FACILITY A";
+                }
+                else if (sortChoice == 2)
+                {
+                    target = &facilityB;
+                    label = "FACILITY B";
+                }
+                else if (sortChoice == 3)
+                {
+                    target = &facilityC;
+                    label = "FACILITY C";
+                }
+                else if (sortChoice == 4)
+                {
+                    combined.clear();
+                    combined.insert(combined.end(), facilityA.begin(), facilityA.end());
+                    combined.insert(combined.end(), facilityB.begin(), facilityB.end());
+                    combined.insert(combined.end(), facilityC.begin(), facilityC.end());
+                    target = &combined;
+                    label = "COMBINED (ALL FACILITIES)";
+                }
+                else
+                {
+                    cout << "\nInvalid choice.\n";
+                    break;
+                }
+
+                if (target->empty())
+                {
+                    cout << "\nSelected dataset is empty.\n";
+                    break;
+                }
+
+                auto start = chrono::high_resolution_clock::now();
+                if (fieldChoice == 1)
+                {
+                    insertionSortByAge(*target);
+                }
+                else
+                {
+                    insertionSortByVisitDuration(*target);
+                }
+                auto end = chrono::high_resolution_clock::now();
+                double sortTime = chrono::duration<double, milli>(end - start).count();
+
+                cout << "\n" << label << " sorted by "
+                     << (fieldChoice == 1 ? "Age" : "Visit Duration")
+                     << " (ascending).\n";
+                cout << "Sort time: " << fixed << setprecision(6)
+                     << sortTime << " ms\n\n";
+
+                cout << left
+                     << setw(12) << "Patient ID"
+                     << setw(8) << "Age"
+                     << setw(20) << "Care Type"
+                     << setw(15) << "Stay(hr)"
+                     << setw(15) << "Cost/hr"
+                     << setw(12) << "Visits/Year" << endl;
+                cout << string(82, '-') << endl;
+
+                for (const Patient& patient : *target)
+                {
+                    cout << left
+                         << setw(12) << patient.patientID
+                         << setw(8) << patient.age
+                         << setw(20) << patient.careType
+                         << setw(15) << fixed << setprecision(2) << patient.lengthOfStay
+                         << setw(15) << fixed << setprecision(2) << patient.baseCostPerHour
+                         << setw(12) << patient.daysVisitsPerYear << endl;
+                }
+
+                cout << "\nTotal patients: " << target->size() << endl;
                 break;
+            }
 
             case 4:
                 cout << "\nReturning to Main Menu...\n";
