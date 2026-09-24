@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 #include <limits>
+#include <chrono>
 
 #include "patient.hpp"
 
@@ -51,78 +52,162 @@ void displaySearchHeader()
 
 
 // ================================================================
-// LINEAR SEARCH BY AGE
+// LINEAR SEARCH BY AGE GROUP
 // ================================================================
 
-void searchByAge(
-    const vector<Patient>& patients,
-    int targetAge
-)
+void searchByAgeGroup(const vector<Patient>& patients)
 {
-    bool found = false;
+    int choice;
 
-    cout << "\nSearching for patients with age: "
-         << targetAge << endl;
+    cout << "\n";
+    cout << "================================================\n";
+    cout << "                 AGE GROUPS\n";
+    cout << "================================================\n";
+    cout << "1. 0-17   : Pediatrics & Adolescents\n";
+    cout << "2. 18-25  : Young Adults / University Students\n";
+    cout << "3. 26-45  : Working Adults (Early Career)\n";
+    cout << "4. 46-60  : Working Adults (Late Career)\n";
+    cout << "5. 61-100 : Senior Citizens / Geriatric Care\n";
+    cout << "================================================\n";
+    cout << "Enter your choice: ";
+    cin >> choice;
+
+
+    // ------------------------------------------------------------
+    // SET AGE RANGE
+    // ------------------------------------------------------------
+
+    int minimumAge;
+    int maximumAge;
+    string ageGroupName;
+
+
+    switch (choice)
+    {
+        case 1:
+            minimumAge = 0;
+            maximumAge = 17;
+            ageGroupName = "Pediatrics & Adolescents";
+            break;
+
+        case 2:
+            minimumAge = 18;
+            maximumAge = 25;
+            ageGroupName = "Young Adults / University Students";
+            break;
+
+        case 3:
+            minimumAge = 26;
+            maximumAge = 45;
+            ageGroupName = "Working Adults (Early Career)";
+            break;
+
+        case 4:
+            minimumAge = 46;
+            maximumAge = 60;
+            ageGroupName = "Working Adults (Late Career)";
+            break;
+
+        case 5:
+            minimumAge = 61;
+            maximumAge = 100;
+            ageGroupName = "Senior Citizens / Geriatric Care";
+            break;
+
+        default:
+            cout << "\nInvalid choice.\n";
+            return;
+    }
+
+
+    // ------------------------------------------------------------
+    // START LINEAR SEARCH TIMER
+    // ------------------------------------------------------------
+
+    auto start = chrono::high_resolution_clock::now();
+
+
+    int foundCount = 0;
+
+
+    // ------------------------------------------------------------
+    // LINEAR SEARCH
+    // ------------------------------------------------------------
 
     for (int i = 0; i < patients.size(); i++)
     {
-        if (patients[i].age == targetAge)
+        if (patients[i].age >= minimumAge &&
+            patients[i].age <= maximumAge)
         {
-            if (!found)
-            {
-                displaySearchHeader();
-            }
-
-            displaySearchResult(patients[i]);
-
-            found = true;
+            foundCount++;
         }
     }
 
-    if (!found)
+
+    // ------------------------------------------------------------
+    // END SEARCH TIMER
+    // ------------------------------------------------------------
+
+    auto end = chrono::high_resolution_clock::now();
+
+
+    double searchTime =
+        chrono::duration<double, milli>(end - start).count();
+
+
+    // ------------------------------------------------------------
+    // DISPLAY RESULT
+    // ------------------------------------------------------------
+
+    cout << "\n";
+    cout << "================================================\n";
+    cout << "             LINEAR SEARCH RESULT\n";
+    cout << "================================================\n";
+
+    cout << "Search Field : Age Group\n";
+    cout << "Category     : " << ageGroupName << endl;
+    cout << "Age Range    : " << minimumAge
+         << " - " << maximumAge << endl;
+
+
+    if (foundCount > 0)
     {
-        cout << "\nNo patient found with age "
-             << targetAge << ".\n";
-    }
-}
+        cout << "\n";
+
+        displaySearchHeader();
 
 
-// ================================================================
-// LINEAR SEARCH BY VISIT DURATION
-// ================================================================
+        // --------------------------------------------------------
+        // SEARCH AGAIN TO DISPLAY MATCHING RECORDS
+        // --------------------------------------------------------
 
-void searchByVisitDuration(
-    const vector<Patient>& patients,
-    double targetDuration
-)
-{
-    bool found = false;
-
-    cout << "\nSearching for patients with visit duration: "
-         << fixed << setprecision(2)
-         << targetDuration << endl;
-
-    for (int i = 0; i < patients.size(); i++)
-    {
-        if (patients[i].lengthOfStay == targetDuration)
+        for (int i = 0; i < patients.size(); i++)
         {
-            if (!found)
+            if (patients[i].age >= minimumAge &&
+                patients[i].age <= maximumAge)
             {
-                displaySearchHeader();
+                displaySearchResult(patients[i]);
             }
-
-            displaySearchResult(patients[i]);
-
-            found = true;
         }
     }
-
-    if (!found)
+    else
     {
-        cout << "\nNo patient found with visit duration "
-             << fixed << setprecision(2)
-             << targetDuration << ".\n";
+        cout << "\nNo matching patients found.\n";
     }
+
+
+    cout << "\n";
+    cout << "------------------------------------------------\n";
+    cout << "Linear search found "
+         << foundCount
+         << " matching patient(s).\n";
+
+    cout << "Search time: "
+         << fixed << setprecision(3)
+         << searchTime
+         << " ms\n";
+
+    cout << "------------------------------------------------\n";
 }
 
 
@@ -130,295 +215,266 @@ void searchByVisitDuration(
 // LINEAR SEARCH BY CARE TYPE
 // ================================================================
 
-void searchByCareType(
-    const vector<Patient>& patients,
-    const string& targetCareType
-)
+void searchByCareType(const vector<Patient>& patients)
 {
-    bool found = false;
+    int choice;
 
-    cout << "\nSearching for patients with care type: "
-         << targetCareType << endl;
+    cout << "\n";
+    cout << "================================================\n";
+    cout << "                CARE TYPE\n";
+    cout << "================================================\n";
+    cout << "1. Emergency\n";
+    cout << "2. Inpatient\n";
+    cout << "3. Outpatient\n";
+    cout << "4. Rehabilitation\n";
+    cout << "5. Routine Checkup\n";
+    cout << "6. Vaccination\n";
+    cout << "================================================\n";
+    cout << "Enter your choice: ";
+    cin >> choice;
+
+
+    string targetCareType;
+
+
+    // ------------------------------------------------------------
+    // SELECT CARE TYPE
+    // ------------------------------------------------------------
+
+    switch (choice)
+    {
+        case 1:
+            targetCareType = "Emergency";
+            break;
+
+        case 2:
+            targetCareType = "Inpatient";
+            break;
+
+        case 3:
+            targetCareType = "Outpatient";
+            break;
+
+        case 4:
+            targetCareType = "Rehabilitation";
+            break;
+
+        case 5:
+            targetCareType = "Routine Checkup";
+            break;
+
+        case 6:
+            targetCareType = "Vaccination";
+            break;
+
+        default:
+            cout << "\nInvalid choice.\n";
+            return;
+    }
+
+
+    // ------------------------------------------------------------
+    // START LINEAR SEARCH TIMER
+    // ------------------------------------------------------------
+
+    auto start = chrono::high_resolution_clock::now();
+
+
+    int foundCount = 0;
+
+
+    // ------------------------------------------------------------
+    // LINEAR SEARCH
+    // ------------------------------------------------------------
 
     for (int i = 0; i < patients.size(); i++)
     {
         if (patients[i].careType == targetCareType)
         {
-            if (!found)
-            {
-                displaySearchHeader();
-            }
-
-            displaySearchResult(patients[i]);
-
-            found = true;
+            foundCount++;
         }
     }
 
-    if (!found)
-    {
-        cout << "\nNo patient found with care type: "
-             << targetCareType << ".\n";
-    }
-}
+
+    // ------------------------------------------------------------
+    // END SEARCH TIMER
+    // ------------------------------------------------------------
+
+    auto end = chrono::high_resolution_clock::now();
 
 
-// ================================================================
-// SELECT DATASET
-// ================================================================
+    double searchTime =
+        chrono::duration<double, milli>(end - start).count();
 
-void linearSearchDatasetMenu(
-    const vector<Patient>& facilityA,
-    const vector<Patient>& facilityB,
-    const vector<Patient>& facilityC,
-    const vector<Patient>& combined,
-    int searchType
-)
-{
-    int datasetChoice;
 
-    do
+    // ------------------------------------------------------------
+    // DISPLAY RESULT
+    // ------------------------------------------------------------
+
+    cout << "\n";
+    cout << "================================================\n";
+    cout << "             LINEAR SEARCH RESULT\n";
+    cout << "================================================\n";
+
+    cout << "Search Field : Care Type\n";
+    cout << "Selected Type: " << targetCareType << endl;
+
+
+    if (foundCount > 0)
     {
         cout << "\n";
-        cout << "================================================\n";
-        cout << "           SELECT DATASET TO SEARCH\n";
-        cout << "================================================\n";
-        cout << "1. Facility A\n";
-        cout << "2. Facility B\n";
-        cout << "3. Facility C\n";
-        cout << "4. Combined (All Facilities)\n";
-        cout << "5. Back to Linear Search Menu\n";
-        cout << "================================================\n";
-        cout << "Enter your choice: ";
-        cin >> datasetChoice;
+
+        displaySearchHeader();
 
 
-        // ========================================================
-        // FACILITY A
-        // ========================================================
+        // --------------------------------------------------------
+        // DISPLAY MATCHING RECORDS
+        // --------------------------------------------------------
 
-        if (datasetChoice == 1)
+        for (int i = 0; i < patients.size(); i++)
         {
-            cout << "\nFacility A selected.\n";
-
-            if (searchType == 1)
+            if (patients[i].careType == targetCareType)
             {
-                int age;
-
-                cout << "Enter age to search: ";
-                cin >> age;
-
-                searchByAge(facilityA, age);
+                displaySearchResult(patients[i]);
             }
-
-            else if (searchType == 2)
-            {
-                double duration;
-
-                cout << "Enter visit duration to search: ";
-                cin >> duration;
-
-                searchByVisitDuration(facilityA, duration);
-            }
-
-            else if (searchType == 3)
-            {
-                string careType;
-
-                cout << "Enter care type to search: ";
-
-                cin.ignore(
-                    numeric_limits<streamsize>::max(),
-                    '\n'
-                );
-
-                getline(cin, careType);
-
-                searchByCareType(facilityA, careType);
-            }
-
-            system("pause");
         }
+    }
+    else
+    {
+        cout << "\nNo matching patients found.\n";
+    }
 
 
-        // ========================================================
-        // FACILITY B
-        // ========================================================
+    cout << "\n";
+    cout << "------------------------------------------------\n";
+    cout << "Linear search found "
+         << foundCount
+         << " matching patient(s).\n";
 
-        else if (datasetChoice == 2)
-        {
-            cout << "\nFacility B selected.\n";
+    cout << "Search time: "
+         << fixed << setprecision(3)
+         << searchTime
+         << " ms\n";
 
-            if (searchType == 1)
-            {
-                int age;
-
-                cout << "Enter age to search: ";
-                cin >> age;
-
-                searchByAge(facilityB, age);
-            }
-
-            else if (searchType == 2)
-            {
-                double duration;
-
-                cout << "Enter visit duration to search: ";
-                cin >> duration;
-
-                searchByVisitDuration(facilityB, duration);
-            }
-
-            else if (searchType == 3)
-            {
-                string careType;
-
-                cout << "Enter care type to search: ";
-
-                cin.ignore(
-                    numeric_limits<streamsize>::max(),
-                    '\n'
-                );
-
-                getline(cin, careType);
-
-                searchByCareType(facilityB, careType);
-            }
-
-            system("pause");
-        }
-
-
-        // ========================================================
-        // FACILITY C
-        // ========================================================
-
-        else if (datasetChoice == 3)
-        {
-            cout << "\nFacility C selected.\n";
-
-            if (searchType == 1)
-            {
-                int age;
-
-                cout << "Enter age to search: ";
-                cin >> age;
-
-                searchByAge(facilityC, age);
-            }
-
-            else if (searchType == 2)
-            {
-                double duration;
-
-                cout << "Enter visit duration to search: ";
-                cin >> duration;
-
-                searchByVisitDuration(facilityC, duration);
-            }
-
-            else if (searchType == 3)
-            {
-                string careType;
-
-                cout << "Enter care type to search: ";
-
-                cin.ignore(
-                    numeric_limits<streamsize>::max(),
-                    '\n'
-                );
-
-                getline(cin, careType);
-
-                searchByCareType(facilityC, careType);
-            }
-
-            system("pause");
-        }
-
-
-        // ========================================================
-        // COMBINED
-        // ========================================================
-
-        else if (datasetChoice == 4)
-        {
-            cout << "\nCombined (All Facilities) selected.\n";
-
-            if (searchType == 1)
-            {
-                int age;
-
-                cout << "Enter age to search: ";
-                cin >> age;
-
-                searchByAge(combined, age);
-            }
-
-            else if (searchType == 2)
-            {
-                double duration;
-
-                cout << "Enter visit duration to search: ";
-                cin >> duration;
-
-                searchByVisitDuration(combined, duration);
-            }
-
-            else if (searchType == 3)
-            {
-                string careType;
-
-                cout << "Enter care type to search: ";
-
-                cin.ignore(
-                    numeric_limits<streamsize>::max(),
-                    '\n'
-                );
-
-                getline(cin, careType);
-
-                searchByCareType(combined, careType);
-            }
-
-            system("pause");
-        }
-
-
-        // ========================================================
-        // BACK
-        // ========================================================
-
-        else if (datasetChoice == 5)
-        {
-            cout << "\nReturning to Linear Search Menu...\n";
-        }
-
-
-        // ========================================================
-        // INVALID
-        // ========================================================
-
-        else
-        {
-            cout << "\nInvalid choice. Please try again.\n";
-            system("pause");
-        }
-
-    } while (datasetChoice != 5);
+    cout << "------------------------------------------------\n";
 }
 
 
 // ================================================================
-// LINEAR SEARCH MENU
+// LINEAR SEARCH BY VISITS PER YEAR
 // ================================================================
 
-void linearSearchMenu(
-    const vector<Patient>& facilityA,
-    const vector<Patient>& facilityB,
-    const vector<Patient>& facilityC,
-    const vector<Patient>& combined
-)
+void searchByVisitDuration(const vector<Patient>& patients)
+{
+    int targetVisits;
+
+    cout << "\n";
+    cout << "================================================\n";
+    cout << "          SEARCH BY VISITS PER YEAR\n";
+    cout << "================================================\n";
+    cout << "Enter number of visits per year: ";
+    cin >> targetVisits;
+
+
+    if (targetVisits < 0)
+    {
+        cout << "\nInvalid number of visits.\n";
+        return;
+    }
+
+
+    // ------------------------------------------------------------
+    // START LINEAR SEARCH TIMER
+    // ------------------------------------------------------------
+
+    auto start = chrono::high_resolution_clock::now();
+
+
+    int foundCount = 0;
+
+
+    // ------------------------------------------------------------
+    // LINEAR SEARCH
+    // ------------------------------------------------------------
+
+    for (int i = 0; i < patients.size(); i++)
+    {
+        if (patients[i].daysVisitsPerYear == targetVisits)
+        {
+            foundCount++;
+        }
+    }
+
+
+    // ------------------------------------------------------------
+    // END SEARCH TIMER
+    // ------------------------------------------------------------
+
+    auto end = chrono::high_resolution_clock::now();
+
+
+    double searchTime =
+        chrono::duration<double, milli>(end - start).count();
+
+
+    // ------------------------------------------------------------
+    // DISPLAY RESULT
+    // ------------------------------------------------------------
+
+    cout << "\n";
+    cout << "================================================\n";
+    cout << "             LINEAR SEARCH RESULT\n";
+    cout << "================================================\n";
+
+    cout << "Search Field : Visits Per Year\n";
+    cout << "Target Visits: " << targetVisits << endl;
+
+
+    if (foundCount > 0)
+    {
+        cout << "\n";
+
+        displaySearchHeader();
+
+
+        // --------------------------------------------------------
+        // DISPLAY MATCHING RECORDS
+        // --------------------------------------------------------
+
+        for (int i = 0; i < patients.size(); i++)
+        {
+            if (patients[i].daysVisitsPerYear == targetVisits)
+            {
+                displaySearchResult(patients[i]);
+            }
+        }
+    }
+    else
+    {
+        cout << "\nNo matching patients found.\n";
+    }
+
+
+    cout << "\n";
+    cout << "------------------------------------------------\n";
+    cout << "Linear search found "
+         << foundCount
+         << " matching patient(s).\n";
+
+    cout << "Search time: "
+         << fixed << setprecision(3)
+         << searchTime
+         << " ms\n";
+
+    cout << "------------------------------------------------\n";
+}
+
+
+// ================================================================
+// SEARCH FIELD MENU
+// ================================================================
+
+void linearSearchFieldMenu(const vector<Patient>& patients)
 {
     int choice;
 
@@ -426,50 +482,36 @@ void linearSearchMenu(
     {
         cout << "\n";
         cout << "================================================\n";
-        cout << "              LINEAR SEARCH\n";
+        cout << "             SEARCH BY WHICH FIELD?\n";
         cout << "================================================\n";
-        cout << "1. Search by Age\n";
-        cout << "2. Search by Visit Duration\n";
-        cout << "3. Search by Care Type\n";
-        cout << "4. Back to Searching Menu\n";
+        cout << "1. Age Group\n";
+        cout << "2. Care Type\n";
+        cout << "3. Search by Visit Duration\n";
+        cout << "4. Back to Main Menu\n";
         cout << "================================================\n";
         cout << "Enter your choice: ";
         cin >> choice;
 
+
         switch (choice)
         {
             case 1:
-                linearSearchDatasetMenu(
-                    facilityA,
-                    facilityB,
-                    facilityC,
-                    combined,
-                    1
-                );
+                searchByAgeGroup(patients);
+                system("pause");
                 break;
 
             case 2:
-                linearSearchDatasetMenu(
-                    facilityA,
-                    facilityB,
-                    facilityC,
-                    combined,
-                    2
-                );
+                searchByCareType(patients);
+                system("pause");
                 break;
 
             case 3:
-                linearSearchDatasetMenu(
-                    facilityA,
-                    facilityB,
-                    facilityC,
-                    combined,
-                    3
-                );
+                searchByVisitDuration(patients);
+                system("pause");
                 break;
 
             case 4:
-                cout << "\nReturning to Searching Menu...\n";
+                cout << "\nReturning to Main Menu...\n";
                 break;
 
             default:
@@ -479,5 +521,90 @@ void linearSearchMenu(
 
     } while (choice != 4);
 }
+
+
+// ================================================================
+// DATASET SELECTION MENU
+// ================================================================
+
+void linearSearchDatasetMenu(
+    const vector<Patient>& facilityA,
+    const vector<Patient>& facilityB,
+    const vector<Patient>& facilityC,
+    const vector<Patient>& combined
+)
+{
+    int datasetChoice;
+
+    do
+    {
+        cout << "\n";
+        cout << "================================================\n";
+        cout << "          SELECT DATASET TO SEARCH\n";
+        cout << "================================================\n";
+        cout << "1. Facility A\n";
+        cout << "2. Facility B\n";
+        cout << "3. Facility C\n";
+        cout << "4. Combined (All Facilities)\n";
+        cout << "5. Back to Main Menu\n";
+        cout << "================================================\n";
+        cout << "Enter your choice: ";
+        cin >> datasetChoice;
+
+
+        switch (datasetChoice)
+        {
+            case 1:
+                cout << "\nFacility A selected.\n";
+                linearSearchFieldMenu(facilityA);
+                break;
+
+            case 2:
+                cout << "\nFacility B selected.\n";
+                linearSearchFieldMenu(facilityB);
+                break;
+
+            case 3:
+                cout << "\nFacility C selected.\n";
+                linearSearchFieldMenu(facilityC);
+                break;
+
+            case 4:
+                cout << "\nCombined (All Facilities) selected.\n";
+                linearSearchFieldMenu(combined);
+                break;
+
+            case 5:
+                cout << "\nReturning to Main Menu...\n";
+                break;
+
+            default:
+                cout << "\nInvalid choice. Please try again.\n";
+                system("pause");
+        }
+
+    } while (datasetChoice != 5);
+}
+
+
+// ================================================================
+// LINEAR SEARCH MAIN MENU
+// ================================================================
+
+void linearSearchMenu(
+    const vector<Patient>& facilityA,
+    const vector<Patient>& facilityB,
+    const vector<Patient>& facilityC,
+    const vector<Patient>& combined
+)
+{
+    linearSearchDatasetMenu(
+        facilityA,
+        facilityB,
+        facilityC,
+        combined
+    );
+}
+
 
 #endif
