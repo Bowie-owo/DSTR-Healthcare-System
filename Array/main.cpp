@@ -12,6 +12,7 @@
 #include "searching.hpp"
 #include "sorting.hpp"
 #include "analysis.hpp"
+#include "array.hpp"
 
 using namespace std;
 

@@ -3,6 +3,7 @@
 #include "linkedList.hpp"
 #include "bubbleSort.hpp"
 #include "insertionSort.hpp"
+#include "quickSort.hpp"
 #include "binarySearch.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "careTypeAnalysis.hpp"
@@ -349,7 +350,83 @@ int main() {
         }
 
         case 7: {
-            cout << "\nThis feature is not implemented yet.\n";
+            cout << "\n---------- Sort (Quick Sort) ----------\n";
+            cout << "Sort by which field?\n";
+            cout << "1. Age\n";
+            cout << "2. Visit Duration (Length of Stay)\n";
+            cout << "Enter your choice: ";
+
+            int fieldChoice;
+            cin >> fieldChoice;
+
+            if (fieldChoice != 1 && fieldChoice != 2) {
+                cout << "\nInvalid choice.\n";
+                break;
+            }
+
+            cout << "\nWhich dataset would you like to sort?\n";
+            cout << "1. Facility A\n";
+            cout << "2. Facility B\n";
+            cout << "3. Facility C\n";
+            cout << "4. Combined (All Facilities)\n";
+            cout << "Enter your choice: ";
+
+            int sortChoice;
+            cin >> sortChoice;
+
+            LinkedList* target = nullptr;
+            string label;
+
+            if (sortChoice == 1) {
+                if (!facilityALoaded) { cout << "\nFacility A is not loaded yet.\n"; break; }
+                target = &facilityA;
+                label = "FACILITY A";
+            }
+            else if (sortChoice == 2) {
+                if (!facilityBLoaded) { cout << "\nFacility B is not loaded yet.\n"; break; }
+                target = &facilityB;
+                label = "FACILITY B";
+            }
+            else if (sortChoice == 3) {
+                if (!facilityCLoaded) { cout << "\nFacility C is not loaded yet.\n"; break; }
+                target = &facilityC;
+                label = "FACILITY C";
+            }
+            else if (sortChoice == 4) {
+                combined.clear();
+                if (facilityALoaded) combined.appendAll(facilityA);
+                if (facilityBLoaded) combined.appendAll(facilityB);
+                if (facilityCLoaded) combined.appendAll(facilityC);
+                target = &combined;
+                label = "COMBINED (ALL FACILITIES)";
+            }
+            else {
+                cout << "\nInvalid choice.\n";
+                break;
+            }
+
+            string fieldLabel = (fieldChoice == 1) ? "Age" : "Visit Duration";
+
+            auto start = chrono::high_resolution_clock::now();
+            if (fieldChoice == 1) {
+                quickSortByAge(*target);
+            }
+            else {
+                quickSortByVisitDuration(*target);
+            }
+            auto end = chrono::high_resolution_clock::now();
+            double ms = chrono::duration<double, milli>(end - start).count();
+
+            cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
+            cout << "Sort time: " << ms << " ms  (n = " << target->getSize() << ")\n";
+            target->display();
+
+            cout << "\nWould you like to search this sorted dataset now? (y/n): ";
+            char searchNow;
+            cin >> searchNow;
+            if (searchNow == 'y' || searchNow == 'Y') {
+                searchList(*target);
+            }
             break;
         }
 

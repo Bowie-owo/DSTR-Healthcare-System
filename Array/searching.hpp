@@ -5,6 +5,7 @@
 #include <vector>
 #include "patient.hpp"
 #include "linearSearch.hpp"
+#include "array.hpp"
 
 using namespace std;
 

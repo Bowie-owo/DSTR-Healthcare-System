@@ -8,6 +8,7 @@
 
 #include "patient.hpp"
 
+
 using namespace std;
 
 void ageGroupAnalysis(const vector<Patient>& patients,
