@@ -8,6 +8,7 @@
 #include "ageGroupAnalysis.hpp"
 #include "careTypeAnalysis.hpp"
 #include "billingAnalysis.hpp"
+#include "linearSearch.hpp"
 
 using namespace std;
 
@@ -25,13 +26,14 @@ void displayMenu() {
     cout << "5. Sort (Bubble Sort)\n";
     cout << "6. Sort (Insertion Sort)\n";
     cout << "7. Sort (Quick Sort)\n";
-    cout << "8. Binary Search (Age Group / Care Type)\n";
-    cout << "9. Age Group Analysis\n";
-    cout << "10. Care Type Analysis (Per Facility)\n";
-    cout << "11. Total Billing Cost (Per Facility)\n";
-    cout << "12. Dataset Summary (Per Facility)\n";
-    cout << "13. Combined Analysis (All Facilities)\n";
-    cout << "14. Exit\n";
+    cout << "8. Linear Search (Age Group / Care Type / Visit time per year)\n";
+    cout << "9. Binary Search (Age Group / Care Type)\n";
+    cout << "10. Age Group Analysis\n";
+    cout << "11. Care Type Analysis (Per Facility)\n";
+    cout << "12. Total Billing Cost (Per Facility)\n";
+    cout << "13. Dataset Summary (Per Facility)\n";
+    cout << "14. Combined Analysis (All Facilities)\n";
+    cout << "15. Exit\n";
     cout << "================================================\n";
     cout << "Enter your choice: ";
 }
@@ -430,7 +432,20 @@ int main() {
             break;
         }
 
-        case 8: {
+                case 8: {
+            linearSearchMenu(
+                facilityA,
+                facilityB,
+                facilityC,
+                combined,
+                facilityALoaded,
+                facilityBLoaded,
+                facilityCLoaded
+            );
+            break;
+        }
+
+        case 9: {
             cout << "\n---------- Binary Search ----------\n";
 
             cout << "\nWhich dataset would you like to search?\n";
@@ -465,7 +480,7 @@ int main() {
         }
 
 
-        case 9: {
+        case 10: {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
                 cout << "\nPlease load a dataset first.\n";
                 break;
@@ -493,7 +508,7 @@ int main() {
             break;
         }
 
-        case 10:
+        case 11:
             cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
             if (facilityALoaded) { cout << "\nFACILITY A\n"; careTypeAnalysis(facilityA); }
             if (facilityBLoaded) { cout << "\nFACILITY B\n"; careTypeAnalysis(facilityB); }
@@ -501,7 +516,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 11:
+        case 12:
             cout << "\n========== TOTAL BILLING COST (PER FACILITY) ==========\n";
             if (facilityALoaded) displayTotalBillingCost(facilityA, "FACILITY A");
             if (facilityBLoaded) displayTotalBillingCost(facilityB, "FACILITY B");
@@ -509,7 +524,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 12:
+        case 13:
             cout << "\n========== DATASET SUMMARY (PER FACILITY) ==========\n";
             if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
             if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
@@ -517,7 +532,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 13:
+        case 14:
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
                 cout << "\nPlease load at least one dataset first.\n";
                 break;
@@ -544,7 +559,7 @@ int main() {
             displayDatasetSummary(combined, "COMBINED (ALL FACILITIES)");
             break;
 
-        case 14:
+        case 15:
             cout << "\nExiting MetroHealth System...\n";
             break;
 
@@ -554,7 +569,7 @@ int main() {
 
         cout << "\n\n\n\n\n";
 
-    } while (choice != 14);
+    } while (choice != 15);
 
     return 0;
 }
