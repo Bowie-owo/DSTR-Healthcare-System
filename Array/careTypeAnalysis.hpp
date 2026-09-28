@@ -42,7 +42,7 @@ void careTypeAnalysis(const vector<Patient>& patients,
           }
 
           // Calculate total stay hours and total medical cost   
-          double totalStay = patient.lengthOfStay*patient.daysVisitsPerYear;
+          double totalStay = patient.lengthOfStay;
           
           double medicalCost = patient.lengthOfStay*patient.baseCostPerHour*patient.daysVisitsPerYear;
 

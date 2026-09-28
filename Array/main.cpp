@@ -117,7 +117,7 @@ void displayFacilitySummary(const vector<Patient>& patients, const string& facil
     vector<int> careTypeCounts;
 
     for (const Patient& patient : patients) {
-        totalStayHours += patient.lengthOfStay * patient.daysVisitsPerYear;
+        totalStayHours += patient.lengthOfStay;
         totalMedicalCost += patient.lengthOfStay * patient.baseCostPerHour * patient.daysVisitsPerYear;
 
         bool found = false;
