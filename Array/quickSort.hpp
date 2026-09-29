@@ -1,7 +1,10 @@
 #ifndef QUICKSORT_HPP
 #define QUICKSORT_HPP
 
+#include <string>
 #include "patient.hpp"
+#include "array.hpp"
+
 
 using namespace std;
 
