@@ -111,6 +111,7 @@ void displayFacilitySummary(const vector<Patient>& patients, const string& facil
 
     double totalStayHours = 0.0;
     double totalMedicalCost = 0.0;
+    double avgCostPerPatient = 0.0;
 
     // Care types found in this facility, with a patient count for each
     vector<string> careTypes;
@@ -134,6 +135,10 @@ void displayFacilitySummary(const vector<Patient>& patients, const string& facil
         }
     }
 
+    if (!patients.empty()) {
+        avgCostPerPatient = totalMedicalCost / patients.size();
+    }
+
     int ageCounts[NUM_AGE_GROUPS];
     int outOfRange = countAgeGroups(patients, ageCounts);
 
@@ -147,6 +152,8 @@ void displayFacilitySummary(const vector<Patient>& patients, const string& facil
          << ": " << defaultfloat << setprecision(6) << totalStayHours << " hrs\n";
     cout << left << setw(28) << "Total Medical Cost"
          << ": RM " << fixed << setprecision(2) << totalMedicalCost << "\n";
+    cout << left << setw(28) << "Average Cost Per Patient"
+         << ": RM " << fixed << setprecision(2) << avgCostPerPatient << "\n";
 
     cout << "\nAge Groups Present:\n";
     bool anyAgeGroup = false;
