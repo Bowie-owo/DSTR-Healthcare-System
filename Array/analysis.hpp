@@ -9,9 +9,9 @@
 #include "careTypeAnalysis.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "billingAnalysis.hpp"
+#include "utils.hpp"
 
 using namespace std;
-
 
 void analysisMenu(
     DynamicArray<Patient>& facilityA,

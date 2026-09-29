@@ -6,6 +6,7 @@
 #include <string>
 
 #include "patient.hpp"
+#include "array.hpp"
 
 
 using namespace std;

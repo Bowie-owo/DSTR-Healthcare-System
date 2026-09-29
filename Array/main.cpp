@@ -13,6 +13,7 @@
 #include "analysis.hpp"
 #include "array.hpp"
 #include "helpers.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
@@ -73,16 +74,6 @@ bool loadDataset(const string& filename, DynamicArray<Patient>& patients) {
     }
 
     return true;
-}
-
-void buildCombined(const DynamicArray<Patient>& a,
-                   const DynamicArray<Patient>& b,
-                   const DynamicArray<Patient>& c,
-                   DynamicArray<Patient>& combined) {
-    combined.clear();
-    combined.appendAll(a);
-    combined.appendAll(b);
-    combined.appendAll(c);
 }
 
 void displayDataset(const DynamicArray<Patient>& patients, const string& facilityName) {
