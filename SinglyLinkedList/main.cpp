@@ -107,6 +107,27 @@ void searchList(LinkedList& target) {
     cout << "Search time: " << searchMs << " ms  (n = " << target.getSize() << ")\n";
 }
 
+void ensureAllDatasetsLoaded(
+    LinkedList& facilityA,
+    LinkedList& facilityB,
+    LinkedList& facilityC,
+    bool& facilityALoaded,
+    bool& facilityBLoaded,
+    bool& facilityCLoaded)
+{
+    if (!facilityALoaded) {
+        facilityALoaded = facilityA.loadCSV("datasets/dataset1_facility_a.csv");
+    }
+
+    if (!facilityBLoaded) {
+        facilityBLoaded = facilityB.loadCSV("datasets/dataset2_facility_b.csv");
+    }
+
+    if (!facilityCLoaded) {
+        facilityCLoaded = facilityC.loadCSV("datasets/dataset3_facility_c.csv");
+    }
+}
+
 int main() {
 
     LinkedList facilityA;
@@ -124,6 +145,17 @@ int main() {
 
         displayMenu();
         cin >> choice;
+
+        if (choice >= 5 && choice <= 13) {
+            ensureAllDatasetsLoaded(
+                facilityA,
+                facilityB,
+                facilityC,
+                facilityALoaded,
+                facilityBLoaded,
+                facilityCLoaded
+            );
+        }
 
         switch (choice) {
 
@@ -176,12 +208,6 @@ int main() {
             break;
 
         case 5: {
-
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
-                cout << "\nPlease load a dataset first.\n";
-                break;
-            }
-
             cout << "\n---------- Sort (Bubble Sort) ----------\n";
             cout << "Sort by which field?\n";
             cout << "1. Age\n";
@@ -264,11 +290,6 @@ int main() {
         }
 
         case 6: {
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
-                cout << "\nPlease load a dataset first.\n";
-                break;
-            }
-
             cout << "\n---------- Sort (Insertion Sort) ----------\n";
             cout << "Sort by which field?\n";
             cout << "1. Age\n";
@@ -445,11 +466,6 @@ int main() {
         }
 
         case 9: {
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
-                cout << "\nPlease load a dataset first.\n";
-                break;
-            }
-
             int loadedCount = (facilityALoaded ? 1 : 0)
                             + (facilityBLoaded ? 1 : 0)
                             + (facilityCLoaded ? 1 : 0);
@@ -477,7 +493,6 @@ int main() {
             if (facilityALoaded) { cout << "\nFACILITY A\n"; careTypeAnalysis(facilityA); }
             if (facilityBLoaded) { cout << "\nFACILITY B\n"; careTypeAnalysis(facilityB); }
             if (facilityCLoaded) { cout << "\nFACILITY C\n"; careTypeAnalysis(facilityC); }
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
         case 11:
@@ -485,7 +500,6 @@ int main() {
             if (facilityALoaded) displayTotalBillingCost(facilityA, "FACILITY A");
             if (facilityBLoaded) displayTotalBillingCost(facilityB, "FACILITY B");
             if (facilityCLoaded) displayTotalBillingCost(facilityC, "FACILITY C");
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
         case 12:
@@ -493,15 +507,9 @@ int main() {
             if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
             if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
             if (facilityCLoaded) displayDatasetSummary(facilityC, "FACILITY C");
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
         case 13:
-            if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
-                cout << "\nPlease load at least one dataset first.\n";
-                break;
-            }
-
             // Rebuild the combined list from whichever facilities
             // are currently loaded, so it never goes stale if a
             // facility gets reloaded.
