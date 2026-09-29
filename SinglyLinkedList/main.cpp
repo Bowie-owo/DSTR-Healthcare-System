@@ -27,13 +27,12 @@ void displayMenu() {
     cout << "6. Sort (Insertion Sort)\n";
     cout << "7. Sort (Quick Sort)\n";
     cout << "8. Linear Search (Age Group / Care Type / Visit time per year)\n";
-    cout << "9. Binary Search (Age Group / Care Type)\n";
-    cout << "10. Age Group Analysis\n";
-    cout << "11. Care Type Analysis (Per Facility)\n";
-    cout << "12. Total Billing Cost (Per Facility)\n";
-    cout << "13. Dataset Summary (Per Facility)\n";
-    cout << "14. Combined Analysis (All Facilities)\n";
-    cout << "15. Exit\n";
+    cout << "9. Age Group Analysis\n";
+    cout << "10. Care Type Analysis (Per Facility)\n";
+    cout << "11. Total Billing Cost (Per Facility)\n";
+    cout << "12. Dataset Summary (Per Facility)\n";
+    cout << "13. Combined Analysis (All Facilities)\n";
+    cout << "14. Exit\n";
     cout << "================================================\n";
     cout << "Enter your choice: ";
 }
@@ -446,41 +445,6 @@ int main() {
         }
 
         case 9: {
-            cout << "\n---------- Binary Search ----------\n";
-
-            cout << "\nWhich dataset would you like to search?\n";
-            cout << "1. Facility A\n";
-            cout << "2. Facility B\n";
-            cout << "3. Facility C\n";
-            cout << "4. Combined (All Facilities)\n";
-            cout << "Enter your choice: ";
-
-            int searchChoice;
-            cin >> searchChoice;
-            LinkedList* target = nullptr;
-
-            if (searchChoice == 1 && facilityALoaded) target = &facilityA;
-            else if (searchChoice == 2 && facilityBLoaded) target = &facilityB;
-            else if (searchChoice == 3 && facilityCLoaded) target = &facilityC;
-            else if (searchChoice == 4) {
-                combined.clear();
-                if (facilityALoaded) combined.appendAll(facilityA);
-                if (facilityBLoaded) combined.appendAll(facilityB);
-                if (facilityCLoaded) combined.appendAll(facilityC);
-                target = &combined;
-            }
-
-            if (target == nullptr) {
-                cout << "\nInvalid choice or dataset is not loaded.\n";
-                break;
-            }
-
-            searchList(*target);
-            break;
-        }
-
-
-        case 10: {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
                 cout << "\nPlease load a dataset first.\n";
                 break;
@@ -508,7 +472,7 @@ int main() {
             break;
         }
 
-        case 11:
+        case 10:
             cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
             if (facilityALoaded) { cout << "\nFACILITY A\n"; careTypeAnalysis(facilityA); }
             if (facilityBLoaded) { cout << "\nFACILITY B\n"; careTypeAnalysis(facilityB); }
@@ -516,7 +480,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 12:
+        case 11:
             cout << "\n========== TOTAL BILLING COST (PER FACILITY) ==========\n";
             if (facilityALoaded) displayTotalBillingCost(facilityA, "FACILITY A");
             if (facilityBLoaded) displayTotalBillingCost(facilityB, "FACILITY B");
@@ -524,7 +488,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 13:
+        case 12:
             cout << "\n========== DATASET SUMMARY (PER FACILITY) ==========\n";
             if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
             if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
@@ -532,7 +496,7 @@ int main() {
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) cout << "\nPlease load a dataset first.\n";
             break;
 
-        case 14:
+        case 13:
             if (!facilityALoaded && !facilityBLoaded && !facilityCLoaded) {
                 cout << "\nPlease load at least one dataset first.\n";
                 break;
@@ -559,7 +523,7 @@ int main() {
             displayDatasetSummary(combined, "COMBINED (ALL FACILITIES)");
             break;
 
-        case 15:
+        case 14:
             cout << "\nExiting MetroHealth System...\n";
             break;
 
@@ -569,7 +533,7 @@ int main() {
 
         cout << "\n\n\n\n\n";
 
-    } while (choice != 15);
+    } while (choice != 14);
 
     return 0;
 }
