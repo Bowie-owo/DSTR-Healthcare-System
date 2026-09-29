@@ -4,13 +4,13 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <vector>
 
 #include "patient.hpp"
+#include "array.hpp"
 
 using namespace std;
 
-void billingAnalysis(const vector<Patient>& patients,
+void billingAnalysis(const DynamicArray<Patient>& patients,
                      const string& facilityName)
 {
     int numberOfPatients = patients.size();

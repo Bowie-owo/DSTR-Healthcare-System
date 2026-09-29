@@ -4,13 +4,13 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <vector>
 
 #include "patient.hpp"
+#include "array.hpp"
 
 using namespace std;
 
-void careTypeAnalysis(const vector<Patient>& patients,
+void careTypeAnalysis(const DynamicArray<Patient>& patients,
                           const string& facilityName)
 {
      string careTypeNames[20];
@@ -25,8 +25,10 @@ void careTypeAnalysis(const vector<Patient>& patients,
      double totalStayHours = 0.0;
      bool showCareTypeCost = facilityName != "ALL FACILITIES";
 
-     for (const Patient& patient : patients)
+     for (int i = 0; i < patients.size(); i++)
      {
+          const Patient& patient = patients[i];
+     
           string careType = patient.careType;
 
           int position = -1;

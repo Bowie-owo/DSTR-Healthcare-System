@@ -2,7 +2,6 @@
 #define SORTING_HPP
 
 #include <iostream>
-#include <vector>
 #include <chrono>
 #include <iomanip>
 #include <string>
@@ -12,56 +11,58 @@
 #include "bubbleSort.hpp"
 #include "quickSort.hpp"
 #include "insertionSort.hpp"
+#include "helpers.hpp"
 
 
 using namespace std;
 
-void sortAndDisplayInsertionDataset(
-    vector<Patient>& patients,
-    const string& datasetName,
-    int fieldChoice
-)
-{
-    cout << "\n========== DATASET: " << datasetName << " ==========\n";
+//COMMENTED OUT FOR NOW, WILL REVISIT LATER(Because it using vector<Patient> instead of DynamicArray<Patient>)
+// void sortAndDisplayInsertionDataset(
+//     DynamicArray<Patient>& patients,
+//     const string& datasetName,
+//     int fieldChoice
+// )
+// {
+//     cout << "\n========== DATASET: " << datasetName << " ==========\n";
 
-    if (patients.empty())
-    {
-        cout << "No patient data is available for this dataset.\n";
-        cout << "Total patients: 0\n";
-        return;
-    }
+//     if (patients.empty())
+//     {
+//         cout << "No patient data is available for this dataset.\n";
+//         cout << "Total patients: 0\n";
+//         return;
+//     }
 
-    auto start = chrono::high_resolution_clock::now();
-    if (fieldChoice == 1)
-    {
-        insertionSortByAge(patients);
-    }
-    else if (fieldChoice == 2)
-    {
-        insertionSortByCareType(patients);
-    }
-    else
-    {
-        insertionSortByVisitDuration(patients);
-    }
-    auto end = chrono::high_resolution_clock::now();
-    double sortTime = chrono::duration<double, milli>(end - start).count();
+//     auto start = chrono::high_resolution_clock::now();
+//     if (fieldChoice == 1)
+//     {
+//         insertionSortByAge(patients);
+//     }
+//     else if (fieldChoice == 2)
+//     {
+//         insertionSortByCareType(patients);
+//     }
+//     else
+//     {
+//         insertionSortByVisitDuration(patients);
+//     }
+//     auto end = chrono::high_resolution_clock::now();
+//     double sortTime = chrono::duration<double, milli>(end - start).count();
 
-    cout << "Sorted by "
-         << (fieldChoice == 1 ? "Age" :
-             fieldChoice == 2 ? "Care Type" : "Visit Duration")
-         << " (ascending).\n";
-    cout << "Sort time: " << fixed << setprecision(6)
-         << sortTime << " ms\n";
-    display(patients);
-    cout << "Total patients: " << patients.size() << "\n";
-}
+//     cout << "Sorted by "
+//          << (fieldChoice == 1 ? "Age" :
+//              fieldChoice == 2 ? "Care Type" : "Visit Duration")
+//          << " (ascending).\n";
+//     cout << "Sort time: " << fixed << setprecision(6)
+//          << sortTime << " ms\n";
+//     display(patients);
+//     cout << "Total patients: " << patients.size() << "\n";
+// }
 
 void sortingMenu(
-    vector<Patient>& facilityA,
-    vector<Patient>& facilityB,
-    vector<Patient>& facilityC,
-    vector<Patient>& combined
+    DynamicArray<Patient>& facilityA,
+    DynamicArray<Patient>& facilityB,
+    DynamicArray<Patient>& facilityC,
+    DynamicArray<Patient>& combined
 )
 
 {
@@ -111,7 +112,7 @@ void sortingMenu(
                 int sortChoice;
                 cin >> sortChoice;
 
-                vector<Patient>* target = nullptr;
+                DynamicArray<Patient>* target = nullptr;
                 string label;
 
                 if (sortChoice == 1)
@@ -132,9 +133,9 @@ void sortingMenu(
                 else if (sortChoice == 4)
                 {
                     combined.clear();
-                    combined.insert(combined.end(), facilityA.begin(), facilityA.end());
-                    combined.insert(combined.end(), facilityB.begin(), facilityB.end());
-                    combined.insert(combined.end(), facilityC.begin(), facilityC.end());
+                    combined.appendAll(facilityA);
+                    combined.appendAll(facilityB);
+                    combined.appendAll(facilityC);
                     target = &combined;
                     label = "COMBINED (ALL FACILITIES)";
                 }
@@ -151,9 +152,9 @@ void sortingMenu(
                 }
 
                 PatientArray bubbleArray;
-                for (const Patient& patient : *target)
+                for (int i = 0; i < target->size(); i++)
                 {
-                    bubbleArray.insertBack(patient);
+                    bubbleArray.insertBack((*target)[i]);
                 }
 
                 auto start = chrono::high_resolution_clock::now();
@@ -198,29 +199,29 @@ void sortingMenu(
                 cout << "2. Care Type\n";
                 cout << "3. Visit Duration (Length of Stay)\n";
                 cout << "Enter your choice: ";
-
+ 
                 int fieldChoice;
                 cin >> fieldChoice;
-
+ 
                 if (fieldChoice < 1 || fieldChoice > 3)
                 {
                     cout << "\nInvalid choice.\n";
                     break;
                 }
-
+ 
                 cout << "\nWhich dataset would you like to sort?\n";
                 cout << "1. Facility A\n";
                 cout << "2. Facility B\n";
                 cout << "3. Facility C\n";
                 cout << "4. Combined (All Facilities)\n";
                 cout << "Enter your choice: ";
-
+ 
                 int sortChoice;
                 cin >> sortChoice;
-
-                vector<Patient>* target = nullptr;
+ 
+                DynamicArray<Patient>* target = nullptr;
                 string label;
-
+ 
                 if (sortChoice == 1)
                 {
                     target = &facilityA;
@@ -239,9 +240,9 @@ void sortingMenu(
                 else if (sortChoice == 4)
                 {
                     combined.clear();
-                    combined.insert(combined.end(), facilityA.begin(), facilityA.end());
-                    combined.insert(combined.end(), facilityB.begin(), facilityB.end());
-                    combined.insert(combined.end(), facilityC.begin(), facilityC.end());
+                    combined.appendAll(facilityA);
+                    combined.appendAll(facilityB);
+                    combined.appendAll(facilityC);
                     target = &combined;
                     label = "COMBINED (ALL FACILITIES)";
                 }
@@ -250,16 +251,16 @@ void sortingMenu(
                     cout << "\nInvalid choice.\n";
                     break;
                 }
-
+ 
                 if (target->empty())
                 {
                     cout << "\nSelected dataset is empty.\n";
                     break;
                 }
-
+ 
                 string fieldLabel = (fieldChoice == 1) ? "Age" : (fieldChoice == 2) ? "Care Type" : "Visit Duration";
-                int last = static_cast<int>(target->size()) - 1;
-
+                int last = target->size() - 1;
+ 
                 auto start = chrono::high_resolution_clock::now();
                 if (fieldChoice == 1)
                 {
@@ -275,13 +276,13 @@ void sortingMenu(
                 }
                 auto end = chrono::high_resolution_clock::now();
                 double sortTime = chrono::duration<double, milli>(end - start).count();
-
-
+ 
+ 
                 cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
                 cout << "Sort time: " << fixed << setprecision(6) << sortTime
                      << " ms  (n = " << target->size() << ")\n";
                 display(*target);
-
+ 
                 cout << "\nWould you like to search this sorted dataset now? (y/n): ";
                 char searchNow;
                 cin >> searchNow;
@@ -289,74 +290,76 @@ void sortingMenu(
                 {
                     searchingMenu(facilityA, facilityB, facilityC, combined);
                 }
-
+ 
                 break;
             }
 
             case 3:
-            {
-                cout << "\n---------- Sort (Insertion Sort) ----------\n";
-                cout << "Sort by which field?\n";
-                cout << "1. Age\n";
-                cout << "2. Care Type\n";
-                cout << "3. Visit Duration (Length of Stay)\n";
-                cout << "Enter your choice: ";
-
-                int fieldChoice;
-                cin >> fieldChoice;
-
-                if (fieldChoice < 1 || fieldChoice > 3)
-                {
-                    cout << "\nInvalid choice.\n";
-                    break;
-                }
-
-                cout << "\nWhich dataset would you like to sort?\n";
-                cout << "1. Facility A\n";
-                cout << "2. Facility B\n";
-                cout << "3. Facility C\n";
-                cout << "4. Combined (All Facilities)\n";
-                cout << "Enter your choice: ";
-
-                int sortChoice;
-                cin >> sortChoice;
-
-                vector<Patient>* target = nullptr;
-                string datasetName;
-
-                if (sortChoice == 1)
-                {
-                    target = &facilityA;
-                    datasetName = "FACILITY A";
-                }
-                else if (sortChoice == 2)
-                {
-                    target = &facilityB;
-                    datasetName = "FACILITY B";
-                }
-                else if (sortChoice == 3)
-                {
-                    target = &facilityC;
-                    datasetName = "FACILITY C";
-                }
-                else if (sortChoice == 4)
-                {
-                    combined.clear();
-                    combined.insert(combined.end(), facilityA.begin(), facilityA.end());
-                    combined.insert(combined.end(), facilityB.begin(), facilityB.end());
-                    combined.insert(combined.end(), facilityC.begin(), facilityC.end());
-                    target = &combined;
-                    datasetName = "COMBINED (ALL FACILITIES)";
-                }
-                else
-                {
-                    cout << "\nInvalid choice.\n";
-                    break;
-                }
-
-                sortAndDisplayInsertionDataset(*target, datasetName, fieldChoice);
+                cout << "\nInsertion Sort is currently not implemented in this version.(current using vector)\n";
                 break;
-            }
+            // {
+            //     cout << "\n---------- Sort (Insertion Sort) ----------\n";
+            //     cout << "Sort by which field?\n";
+            //     cout << "1. Age\n";
+            //     cout << "2. Care Type\n";
+            //     cout << "3. Visit Duration (Length of Stay)\n";
+            //     cout << "Enter your choice: ";
+
+            //     int fieldChoice;
+            //     cin >> fieldChoice;
+
+            //     if (fieldChoice < 1 || fieldChoice > 3)
+            //     {
+            //         cout << "\nInvalid choice.\n";
+            //         break;
+            //     }
+
+            //     cout << "\nWhich dataset would you like to sort?\n";
+            //     cout << "1. Facility A\n";
+            //     cout << "2. Facility B\n";
+            //     cout << "3. Facility C\n";
+            //     cout << "4. Combined (All Facilities)\n";
+            //     cout << "Enter your choice: ";
+
+            //     int sortChoice;
+            //     cin >> sortChoice;
+
+            //     vector<Patient>* target = nullptr;
+            //     string datasetName;
+
+            //     if (sortChoice == 1)
+            //     {
+            //         target = &facilityA;
+            //         datasetName = "FACILITY A";
+            //     }
+            //     else if (sortChoice == 2)
+            //     {
+            //         target = &facilityB;
+            //         datasetName = "FACILITY B";
+            //     }
+            //     else if (sortChoice == 3)
+            //     {
+            //         target = &facilityC;
+            //         datasetName = "FACILITY C";
+            //     }
+            //     else if (sortChoice == 4)
+            //     {
+            //         combined.clear();
+            //         combined.appendAll(facilityA);
+            //         combined.appendAll(facilityB);
+            //         combined.appendAll(facilityC);
+            //         target = &combined;
+            //         datasetName = "COMBINED (ALL FACILITIES)";
+            //     }
+            //     else
+            //     {
+            //         cout << "\nInvalid choice.\n";
+            //         break;
+            //     }
+
+            //     sortAndDisplayInsertionDataset(*target, datasetName, fieldChoice);
+            //     break;
+            // }
 
             case 4:
                 cout << "\nReturning to Main Menu...\n";

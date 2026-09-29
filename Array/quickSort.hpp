@@ -1,8 +1,10 @@
 #ifndef QUICKSORT_HPP
 #define QUICKSORT_HPP
 
-#include <vector>
+#include <string>
 #include "patient.hpp"
+#include "array.hpp"
+
 
 using namespace std;
 
@@ -10,7 +12,7 @@ using namespace std;
 // QUICK SORT BY AGE
 // ==========================================
 
-int partitionByAge(vector<Patient>& data, int low, int high)
+int partitionByAge(DynamicArray<Patient>& data, int low, int high)
 {
     int pivot = data[high].age;
     int i = low - 1;
@@ -34,7 +36,7 @@ int partitionByAge(vector<Patient>& data, int low, int high)
     return i + 1;
 }
 
-void quickSortByAge(vector<Patient>& data, int low, int high)
+void quickSortByAge(DynamicArray<Patient>& data, int low, int high)
 {
     if (low < high)
     {
@@ -51,7 +53,7 @@ void quickSortByAge(vector<Patient>& data, int low, int high)
 // ==========================================
 
 int partitionByVisitDuration(
-    vector<Patient>& data,
+    DynamicArray<Patient>& data,
     int low,
     int high
 )
@@ -79,7 +81,7 @@ int partitionByVisitDuration(
 }
 
 void quickSortByVisitDuration(
-    vector<Patient>& data,
+    DynamicArray<Patient>& data,
     int low,
     int high
 )
@@ -107,7 +109,7 @@ void quickSortByVisitDuration(
 // QUICK SORT BY CARE TYPE (3-way partition)
 // ==========================================
 
-void quickSortByCareType(vector<Patient>& data, int low, int high)
+void quickSortByCareType(DynamicArray<Patient>& data, int low, int high)
 {
     while (low < high)
     {

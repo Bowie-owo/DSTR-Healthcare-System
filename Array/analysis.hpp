@@ -2,20 +2,22 @@
 #define ANALYSIS_HPP
 
 #include <iostream>
-#include <vector>
+#include <string>
 #include "patient.hpp"
+#include "array.hpp"
+#include "helpers.hpp"
 #include "careTypeAnalysis.hpp"
 #include "ageGroupAnalysis.hpp"
 #include "billingAnalysis.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
-
 void analysisMenu(
-    vector<Patient>& facilityA,
-    vector<Patient>& facilityB,
-    vector<Patient>& facilityC,
-    vector<Patient>& combined
+    DynamicArray<Patient>& facilityA,
+    DynamicArray<Patient>& facilityB,
+    DynamicArray<Patient>& facilityC,
+    DynamicArray<Patient>& combined
 )
 
 {
@@ -51,19 +53,7 @@ void analysisMenu(
                 careTypeAnalysis(facilityC, "FACILITY C");
 
                 // Combine all facilities
-                vector<Patient> combined = facilityA;
-
-                combined.insert(
-                    combined.end(),
-                    facilityB.begin(),
-                    facilityB.end()
-                );
-
-                combined.insert(
-                    combined.end(),
-                    facilityC.begin(),
-                    facilityC.end()
-                );
+                buildCombined(facilityA, facilityB, facilityC, combined);
 
                 // Combined analysis
                 careTypeAnalysis(combined, "ALL FACILITIES");
@@ -82,19 +72,7 @@ void analysisMenu(
                 ageGroupAnalysis(facilityC, "FACILITY C");
 
                 // Combine all three datasets
-                vector<Patient> combined = facilityA;
-
-                combined.insert(
-                    combined.end(),
-                    facilityB.begin(),
-                    facilityB.end()
-                );
-
-                combined.insert(
-                    combined.end(),
-                    facilityC.begin(),
-                    facilityC.end()
-                );
+                buildCombined(facilityA, facilityB, facilityC, combined);
 
                 ageGroupAnalysis(combined, "COMBINED (ALL FACILITIES)");
 
@@ -115,19 +93,7 @@ void analysisMenu(
                 billingAnalysis(facilityC, "FACILITY C");
 
                 // Combine all facilities
-                vector<Patient> combined = facilityA;
-
-                combined.insert(
-                    combined.end(),
-                    facilityB.begin(),
-                    facilityB.end()
-                );
-
-                combined.insert(
-                    combined.end(),
-                    facilityC.begin(),
-                    facilityC.end()
-                );
+                buildCombined(facilityA, facilityB, facilityC, combined);
 
                 // Combined total
                 billingAnalysis(combined, "ALL FACILITIES");

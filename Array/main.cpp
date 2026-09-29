@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <vector>
 
 #include "patient.hpp"
 #include "ageGroupAnalysis.hpp"
@@ -13,6 +12,8 @@
 #include "sorting.hpp"
 #include "analysis.hpp"
 #include "array.hpp"
+#include "helpers.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
@@ -37,7 +38,7 @@ void displayMenu() {
 	cout << "Enter your choice: ";
 }
 
-bool loadDataset(const string& filename, vector<Patient>& patients) {
+bool loadDataset(const string& filename, DynamicArray<Patient>& patients) {
     ifstream file(filename);
     if (!file.is_open()) {
         cout << "Error: Unable to open file: " << filename << endl;
@@ -75,7 +76,7 @@ bool loadDataset(const string& filename, vector<Patient>& patients) {
     return true;
 }
 
-void displayDataset(const vector<Patient>& patients, const string& facilityName) {
+void displayDataset(const DynamicArray<Patient>& patients, const string& facilityName) {
     cout << "\n========== " << facilityName << " ==========\n";
     cout << left
          << setw(12) << "Patient ID"
@@ -86,7 +87,8 @@ void displayDataset(const vector<Patient>& patients, const string& facilityName)
          << setw(12) << "Visits/Year" << endl;
     cout << string(76, '-') << endl;
 
-    for (const Patient& patient : patients) {
+    for (int i = 0; i < patients.size(); i++) {
+        const Patient& patient = patients[i];
         cout << left
              << setw(12) << patient.patientID
              << setw(8) << patient.age
@@ -100,13 +102,13 @@ void displayDataset(const vector<Patient>& patients, const string& facilityName)
 }
 
 void loadAndDisplayFacility(const string& filename, const string& facilityName) {
-    vector<Patient> patients;
+    DynamicArray<Patient> patients;
     if (loadDataset(filename, patients)) {
         displayDataset(patients, facilityName);
     }
 }
 
-void displayFacilitySummary(const vector<Patient>& patients, const string& facilityName) {
+void displayFacilitySummary(const DynamicArray<Patient>& patients, const string& facilityName) {
     const string line(80, '=');
 
     double totalStayHours = 0.0;
@@ -114,15 +116,16 @@ void displayFacilitySummary(const vector<Patient>& patients, const string& facil
     double avgCostPerPatient = 0.0;
 
     // Care types found in this facility, with a patient count for each
-    vector<string> careTypes;
-    vector<int> careTypeCounts;
+    DynamicArray<string> careTypes;
+    DynamicArray<int> careTypeCounts;
 
-    for (const Patient& patient : patients) {
+    for (int p = 0; p < patients.size(); p++) {
+        const Patient& patient = patients[p];
         totalStayHours += patient.lengthOfStay;
         totalMedicalCost += patient.lengthOfStay * patient.baseCostPerHour * patient.daysVisitsPerYear;
 
         bool found = false;
-        for (size_t i = 0; i < careTypes.size(); i++) {
+        for (int i = 0; i < careTypes.size(); i++) {
             if (careTypes[i] == patient.careType) {
                 careTypeCounts[i]++;
                 found = true;
@@ -219,27 +222,16 @@ int main() {
         // Sorting
         case 5:
         {
-            vector<Patient> facilityA;
-            vector<Patient> facilityB;
-            vector<Patient> facilityC;
+            DynamicArray<Patient> facilityA;
+            DynamicArray<Patient> facilityB;
+            DynamicArray<Patient> facilityC;
+            DynamicArray<Patient> combined;
 
             loadDataset("datasets/dataset1_facility_a.csv", facilityA);
             loadDataset("datasets/dataset2_facility_b.csv", facilityB);
             loadDataset("datasets/dataset3_facility_c.csv", facilityC);
 
-            vector<Patient> combined = facilityA;
-
-            combined.insert(
-                combined.end(),
-                facilityB.begin(),
-                facilityB.end()
-            );
-
-            combined.insert(
-                combined.end(),
-                facilityC.begin(),
-                facilityC.end()
-            );
+            buildCombined(facilityA, facilityB, facilityC, combined);
 
             sortingMenu(facilityA, facilityB, facilityC, combined);
 
@@ -249,27 +241,16 @@ int main() {
         // Searching
         case 6:
         {
-            vector<Patient> facilityA;
-            vector<Patient> facilityB;
-            vector<Patient> facilityC;
+            DynamicArray<Patient> facilityA;
+            DynamicArray<Patient> facilityB;
+            DynamicArray<Patient> facilityC;
+            DynamicArray<Patient> combined;
 
             loadDataset("datasets/dataset1_facility_a.csv", facilityA);
             loadDataset("datasets/dataset2_facility_b.csv", facilityB);
             loadDataset("datasets/dataset3_facility_c.csv", facilityC);
 
-            vector<Patient> combined = facilityA;
-
-            combined.insert(
-                combined.end(),
-                facilityB.begin(),
-                facilityB.end()
-            );
-
-            combined.insert(
-                combined.end(),
-                facilityC.begin(),
-                facilityC.end()
-            );
+            buildCombined(facilityA, facilityB, facilityC, combined);
 
             searchingMenu(facilityA, facilityB, facilityC, combined);
 
@@ -279,27 +260,16 @@ int main() {
         // Analysis
         case 7:
         {
-            vector<Patient> facilityA;
-            vector<Patient> facilityB;
-            vector<Patient> facilityC;
+            DynamicArray<Patient> facilityA;
+            DynamicArray<Patient> facilityB;
+            DynamicArray<Patient> facilityC;
+            DynamicArray<Patient> combined;
 
             loadDataset("datasets/dataset1_facility_a.csv", facilityA);
             loadDataset("datasets/dataset2_facility_b.csv", facilityB);
             loadDataset("datasets/dataset3_facility_c.csv", facilityC);
 
-            vector<Patient> combined = facilityA;
-
-            combined.insert(
-                combined.end(),
-                facilityB.begin(),
-                facilityB.end()
-            );
-
-            combined.insert(
-                combined.end(),
-                facilityC.begin(),
-                facilityC.end()
-            );
+            buildCombined(facilityA, facilityB, facilityC, combined);
 
             analysisMenu(facilityA, facilityB, facilityC, combined);
 
@@ -309,9 +279,10 @@ int main() {
         // Dataset Summary
         case 8:
         {
-            vector<Patient> facilityA;
-            vector<Patient> facilityB;
-            vector<Patient> facilityC;
+            DynamicArray<Patient> facilityA;
+            DynamicArray<Patient> facilityB;
+            DynamicArray<Patient> facilityC;
+            DynamicArray<Patient> combined;
 
             bool okA = loadDataset("datasets/dataset1_facility_a.csv", facilityA);
             bool okB = loadDataset("datasets/dataset2_facility_b.csv", facilityB);
@@ -322,10 +293,8 @@ int main() {
                 break;
             }
 
-            vector<Patient> combined = facilityA;
-            combined.insert(combined.end(), facilityB.begin(), facilityB.end());
-            combined.insert(combined.end(), facilityC.begin(), facilityC.end());
-
+            buildCombined(facilityA, facilityB, facilityC, combined);
+       
             displayFacilitySummary(facilityA, "FACILITY A");
             displayFacilitySummary(facilityB, "FACILITY B");
             displayFacilitySummary(facilityC, "FACILITY C");
