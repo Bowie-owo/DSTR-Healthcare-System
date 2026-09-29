@@ -1,11 +1,11 @@
 #ifndef ARRAY_INSERTIONSORT_HPP
 #define ARRAY_INSERTIONSORT_HPP
 
-#include <vector>
 #include "patient.hpp"
+#include "array.hpp"
 
 // Put patients in order from the youngest age to the oldest age.
-void insertionSortByAge(std::vector<Patient>& patients) {
+void insertionSortByAge(DynamicArray<Patient>& patients) {
 	for (int currentIndex = 1; currentIndex < static_cast<int>(patients.size()); currentIndex++) {
 		Patient currentPatient = patients[currentIndex];
 		int position = currentIndex - 1;
@@ -22,7 +22,7 @@ void insertionSortByAge(std::vector<Patient>& patients) {
 }
 
 // Put patients in alphabetical order by care type.
-void insertionSortByCareType(std::vector<Patient>& patients) {
+void insertionSortByCareType(DynamicArray<Patient>& patients) {
 	for (int currentIndex = 1; currentIndex < static_cast<int>(patients.size()); currentIndex++) {
 		Patient currentPatient = patients[currentIndex];
 		int position = currentIndex - 1;
@@ -39,7 +39,7 @@ void insertionSortByCareType(std::vector<Patient>& patients) {
 }
 
 // Put patients in order from the shortest stay to the longest stay.
-void insertionSortByVisitDuration(std::vector<Patient>& patients) {
+void insertionSortByVisitDuration(DynamicArray<Patient>& patients) {
 	for (int currentIndex = 1; currentIndex < static_cast<int>(patients.size()); currentIndex++) {
 		Patient currentPatient = patients[currentIndex];
 		int position = currentIndex - 1;
