@@ -57,6 +57,37 @@ void insertionSortByAge(LinkedList& list) {
     head = sorted;
 }
 
+// Contract: sorts 'list' in place, alphabetically by care type.
+void insertionSortByCareType(LinkedList& list) {
+
+    Node*& head = list.getHead();
+    Node* sorted = nullptr;
+
+    while (head != nullptr) {
+        Node* current = head;
+        head = head->next;
+
+        if (sorted == nullptr ||
+            current->data.careType < sorted->data.careType) {
+            current->next = sorted;
+            sorted = current;
+        }
+        else {
+            Node* place = sorted;
+
+            while (place->next != nullptr &&
+                   place->next->data.careType <= current->data.careType) {
+                place = place->next;
+            }
+
+            current->next = place->next;
+            place->next = current;
+        }
+    }
+
+    head = sorted;
+}
+
 // Contract: sorts 'list' in place, ascending by visit duration
 // (length of stay, in hours). Exact same idea as above, just
 // comparing a different field.
