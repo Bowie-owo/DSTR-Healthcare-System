@@ -16,6 +16,47 @@
 
 using namespace std;
 
+void sortAndDisplayInsertionDataset(
+    vector<Patient>& patients,
+    const string& datasetName,
+    int fieldChoice
+)
+{
+    cout << "\n========== DATASET: " << datasetName << " ==========\n";
+
+    if (patients.empty())
+    {
+        cout << "No patient data is available for this dataset.\n";
+        cout << "Total patients: 0\n";
+        return;
+    }
+
+    auto start = chrono::high_resolution_clock::now();
+    if (fieldChoice == 1)
+    {
+        insertionSortByAge(patients);
+    }
+    else if (fieldChoice == 2)
+    {
+        insertionSortByCareType(patients);
+    }
+    else
+    {
+        insertionSortByVisitDuration(patients);
+    }
+    auto end = chrono::high_resolution_clock::now();
+    double sortTime = chrono::duration<double, milli>(end - start).count();
+
+    cout << "Sorted by "
+         << (fieldChoice == 1 ? "Age" :
+             fieldChoice == 2 ? "Care Type" : "Visit Duration")
+         << " (ascending).\n";
+    cout << "Sort time: " << fixed << setprecision(6)
+         << sortTime << " ms\n";
+    display(patients);
+    cout << "Total patients: " << patients.size() << "\n";
+}
+
 void sortingMenu(
     vector<Patient>& facilityA,
     vector<Patient>& facilityB,
@@ -257,13 +298,14 @@ void sortingMenu(
                 cout << "\n---------- Sort (Insertion Sort) ----------\n";
                 cout << "Sort by which field?\n";
                 cout << "1. Age\n";
-                cout << "2. Visit Duration (Length of Stay)\n";
+                cout << "2. Care Type\n";
+                cout << "3. Visit Duration (Length of Stay)\n";
                 cout << "Enter your choice: ";
 
                 int fieldChoice;
                 cin >> fieldChoice;
 
-                if (fieldChoice != 1 && fieldChoice != 2)
+                if (fieldChoice < 1 || fieldChoice > 3)
                 {
                     cout << "\nInvalid choice.\n";
                     break;
@@ -280,22 +322,22 @@ void sortingMenu(
                 cin >> sortChoice;
 
                 vector<Patient>* target = nullptr;
-                string label;
+                string datasetName;
 
                 if (sortChoice == 1)
                 {
                     target = &facilityA;
-                    label = "FACILITY A";
+                    datasetName = "FACILITY A";
                 }
                 else if (sortChoice == 2)
                 {
                     target = &facilityB;
-                    label = "FACILITY B";
+                    datasetName = "FACILITY B";
                 }
                 else if (sortChoice == 3)
                 {
                     target = &facilityC;
-                    label = "FACILITY C";
+                    datasetName = "FACILITY C";
                 }
                 else if (sortChoice == 4)
                 {
@@ -304,7 +346,7 @@ void sortingMenu(
                     combined.insert(combined.end(), facilityB.begin(), facilityB.end());
                     combined.insert(combined.end(), facilityC.begin(), facilityC.end());
                     target = &combined;
-                    label = "COMBINED (ALL FACILITIES)";
+                    datasetName = "COMBINED (ALL FACILITIES)";
                 }
                 else
                 {
@@ -312,51 +354,7 @@ void sortingMenu(
                     break;
                 }
 
-                if (target->empty())
-                {
-                    cout << "\nSelected dataset is empty.\n";
-                    break;
-                }
-
-                auto start = chrono::high_resolution_clock::now();
-                if (fieldChoice == 1)
-                {
-                    insertionSortByAge(*target);
-                }
-                else
-                {
-                    insertionSortByVisitDuration(*target);
-                }
-                auto end = chrono::high_resolution_clock::now();
-                double sortTime = chrono::duration<double, milli>(end - start).count();
-
-                cout << "\n" << label << " sorted by "
-                     << (fieldChoice == 1 ? "Age" : "Visit Duration")
-                     << " (ascending).\n";
-                cout << "Sort time: " << fixed << setprecision(6)
-                     << sortTime << " ms\n\n";
-
-                cout << left
-                     << setw(12) << "Patient ID"
-                     << setw(8) << "Age"
-                     << setw(20) << "Care Type"
-                     << setw(15) << "Stay(hr)"
-                     << setw(15) << "Cost/hr"
-                     << setw(12) << "Visits/Year" << endl;
-                cout << string(82, '-') << endl;
-
-                for (const Patient& patient : *target)
-                {
-                    cout << left
-                         << setw(12) << patient.patientID
-                         << setw(8) << patient.age
-                         << setw(20) << patient.careType
-                         << setw(15) << fixed << setprecision(2) << patient.lengthOfStay
-                         << setw(15) << fixed << setprecision(2) << patient.baseCostPerHour
-                         << setw(12) << patient.daysVisitsPerYear << endl;
-                }
-
-                cout << "\nTotal patients: " << target->size() << endl;
+                sortAndDisplayInsertionDataset(*target, datasetName, fieldChoice);
                 break;
             }
 

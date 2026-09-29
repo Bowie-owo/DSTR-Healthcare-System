@@ -21,6 +21,23 @@ void insertionSortByAge(std::vector<Patient>& patients) {
 	}
 }
 
+// Put patients in alphabetical order by care type.
+void insertionSortByCareType(std::vector<Patient>& patients) {
+	for (int currentIndex = 1; currentIndex < static_cast<int>(patients.size()); currentIndex++) {
+		Patient currentPatient = patients[currentIndex];
+		int position = currentIndex - 1;
+
+		// Move care types that come later in the alphabet one place to the right.
+		while (position >= 0 && patients[position].careType > currentPatient.careType) {
+			patients[position + 1] = patients[position];
+			position--;
+		}
+
+		// Put the patient in the empty place.
+		patients[position + 1] = currentPatient;
+	}
+}
+
 // Put patients in order from the shortest stay to the longest stay.
 void insertionSortByVisitDuration(std::vector<Patient>& patients) {
 	for (int currentIndex = 1; currentIndex < static_cast<int>(patients.size()); currentIndex++) {
