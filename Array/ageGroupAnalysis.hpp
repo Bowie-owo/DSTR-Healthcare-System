@@ -4,22 +4,23 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <vector>
 
 #include "patient.hpp"
 
 
 using namespace std;
 
-void ageGroupAnalysis(const vector<Patient>& patients,
+void ageGroupAnalysis(const DynamicArray<Patient>& patients,
                       const string& facilityName)
 {
     // Array to store the number of patients in each age group
     int ageGroupCount[5] = {0};
 
     // Count patients according to their age
-    for (const Patient& patient : patients)
+    for (int i = 0; i < patients.size(); i++)
     {
+        const Patient& patient = patients[i];
+    
         if (patient.age >= 0 && patient.age <= 17)
         {
             ageGroupCount[0]++;

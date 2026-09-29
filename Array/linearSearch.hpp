@@ -4,11 +4,11 @@
 #include <iostream>
 #include <iomanip>
 #include <string>
-#include <vector>
 #include <limits>
 #include <chrono>
 
 #include "patient.hpp"
+#include "array.hpp"
 
 using namespace std;
 
@@ -55,7 +55,7 @@ void displaySearchHeader()
 // LINEAR SEARCH BY AGE GROUP
 // ================================================================
 
-void searchByAgeGroup(const vector<Patient>& patients)
+void searchByAgeGroup(const DynamicArray<Patient>& patients)
 {
     int choice;
 
@@ -215,7 +215,7 @@ void searchByAgeGroup(const vector<Patient>& patients)
 // LINEAR SEARCH BY CARE TYPE
 // ================================================================
 
-void searchByCareType(const vector<Patient>& patients)
+void searchByCareType(const DynamicArray<Patient>& patients)
 {
     int choice;
 
@@ -364,7 +364,7 @@ void searchByCareType(const vector<Patient>& patients)
 // LINEAR SEARCH BY VISITS PER YEAR
 // ================================================================
 
-void searchByVisitDuration(const vector<Patient>& patients)
+void searchByVisitDuration(const DynamicArray<Patient>& patients)
 {
     int targetVisits;
 
@@ -474,7 +474,7 @@ void searchByVisitDuration(const vector<Patient>& patients)
 // SEARCH FIELD MENU
 // ================================================================
 
-void linearSearchFieldMenu(const vector<Patient>& patients)
+void linearSearchFieldMenu(const DynamicArray<Patient>& patients)
 {
     int choice;
 
@@ -528,10 +528,10 @@ void linearSearchFieldMenu(const vector<Patient>& patients)
 // ================================================================
 
 void linearSearchDatasetMenu(
-    const vector<Patient>& facilityA,
-    const vector<Patient>& facilityB,
-    const vector<Patient>& facilityC,
-    const vector<Patient>& combined
+    const DynamicArray<Patient>& facilityA,
+    const DynamicArray<Patient>& facilityB,
+    const DynamicArray<Patient>& facilityC,
+    const DynamicArray<Patient>& combined
 )
 {
     int datasetChoice;
@@ -592,10 +592,10 @@ void linearSearchDatasetMenu(
 // ================================================================
 
 void linearSearchMenu(
-    const vector<Patient>& facilityA,
-    const vector<Patient>& facilityB,
-    const vector<Patient>& facilityC,
-    const vector<Patient>& combined
+    const DynamicArray<Patient>& facilityA,
+    const DynamicArray<Patient>& facilityB,
+    const DynamicArray<Patient>& facilityC,
+    const DynamicArray<Patient>& combined
 )
 {
     linearSearchDatasetMenu(

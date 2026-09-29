@@ -2,7 +2,7 @@
 #define SEARCHING_HPP
 
 #include <iostream>
-#include <vector>
+#include <string>
 #include "patient.hpp"
 #include "linearSearch.hpp"
 #include "array.hpp"
@@ -10,10 +10,10 @@
 using namespace std;
 
 void searchingMenu(
-    vector<Patient>& facilityA,
-    vector<Patient>& facilityB,
-    vector<Patient>& facilityC,
-    vector<Patient>& combined
+    DynamicArray<Patient>& facilityA,
+    DynamicArray<Patient>& facilityB,
+    DynamicArray<Patient>& facilityC,
+    DynamicArray<Patient>& combined
 )
 {
     int choice;
