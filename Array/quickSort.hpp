@@ -103,4 +103,54 @@ void quickSortByVisitDuration(
     }
 }
 
+// ==========================================
+// QUICK SORT BY CARE TYPE (3-way partition)
+// ==========================================
+
+void quickSortByCareType(vector<Patient>& data, int low, int high)
+{
+    while (low < high)
+    {
+        // Middle element as pivot avoids worst case on already-sorted data
+        string pivot = data[low + (high - low) / 2].careType;
+
+        int lt = low;    // data[low..lt-1]   <  pivot
+        int i  = low;    // data[lt..i-1]     == pivot
+        int gt = high;   // data[gt+1..high]  >  pivot
+
+        while (i <= gt)
+        {
+            int cmp = data[i].careType.compare(pivot);
+
+            if (cmp < 0)
+            {
+                swap(data[lt], data[i]);
+                lt++;
+                i++;
+            }
+            else if (cmp > 0)
+            {
+                swap(data[i], data[gt]);
+                gt--;
+            }
+            else
+            {
+                i++;
+            }
+        }
+
+        // Recurse on the smaller side, loop on the larger (bounds stack depth to O(log n))
+        if (lt - low < high - gt)
+        {
+            quickSortByCareType(data, low, lt - 1);
+            low = gt + 1;
+        }
+        else
+        {
+            quickSortByCareType(data, gt + 1, high);
+            high = lt - 1;
+        }
+    }
+}
+
 #endif

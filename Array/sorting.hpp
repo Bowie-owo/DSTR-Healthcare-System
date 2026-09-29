@@ -154,13 +154,14 @@ void sortingMenu(
                 cout << "\n---------- Sort (Quick Sort) ----------\n";
                 cout << "Sort by which field?\n";
                 cout << "1. Age\n";
-                cout << "2. Visit Duration (Length of Stay)\n";
+                cout << "2. Care Type\n";
+                cout << "3. Visit Duration (Length of Stay)\n";
                 cout << "Enter your choice: ";
 
                 int fieldChoice;
                 cin >> fieldChoice;
 
-                if (fieldChoice != 1 && fieldChoice != 2)
+                if (fieldChoice < 1 || fieldChoice > 3)
                 {
                     cout << "\nInvalid choice.\n";
                     break;
@@ -215,13 +216,17 @@ void sortingMenu(
                     break;
                 }
 
-                string fieldLabel = (fieldChoice == 1) ? "Age" : "Visit Duration";
+                string fieldLabel = (fieldChoice == 1) ? "Age" : (fieldChoice == 2) ? "Care Type" : "Visit Duration";
                 int last = static_cast<int>(target->size()) - 1;
 
                 auto start = chrono::high_resolution_clock::now();
                 if (fieldChoice == 1)
                 {
                     quickSortByAge(*target, 0, last);
+                }
+                else if (fieldChoice == 2)
+                {
+                    quickSortByCareType(*target, 0, last);
                 }
                 else
                 {
