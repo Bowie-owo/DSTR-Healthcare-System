@@ -513,6 +513,11 @@ int main() {
             if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
             if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
             if (facilityCLoaded) displayDatasetSummary(facilityC, "FACILITY C");
+            combined.clear();
+            if (facilityALoaded) combined.appendAll(facilityA);
+            if (facilityBLoaded) combined.appendAll(facilityB);
+            if (facilityCLoaded) combined.appendAll(facilityC);
+            displayDatasetSummary(combined, "COMBINED (A + B + C)");
             break;
 
         case 13:
