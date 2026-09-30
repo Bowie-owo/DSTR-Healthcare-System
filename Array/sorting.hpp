@@ -12,6 +12,7 @@
 #include "quickSort.hpp"
 #include "insertionSort.hpp"
 #include "helpers.hpp"
+#include "searchingSort.hpp"
 
 
 using namespace std;
@@ -24,11 +25,16 @@ void sortAndDisplayInsertionDataset(
 {
     if (patients.empty())
     {
-        cout << "\nNo patient data is available for " << datasetName << ".\n";
+        cout << "\nNo patient data is available for "
+             << datasetName << ".\n";
         return;
     }
 
+    // ------------------------------------------------------------
+    // INSERTION SORT
+    // ------------------------------------------------------------
     auto start = chrono::high_resolution_clock::now();
+
     if (fieldChoice == 1)
     {
         insertionSortByAge(patients);
@@ -41,17 +47,71 @@ void sortAndDisplayInsertionDataset(
     {
         insertionSortByVisitDuration(patients);
     }
-    auto end = chrono::high_resolution_clock::now();
-    double sortTime = chrono::duration<double, milli>(end - start).count();
 
-    cout << "\n" << datasetName << " sorted by "
-         << (fieldChoice == 1 ? "Age" :
-             fieldChoice == 2 ? "Care Type" : "Visit Duration")
-         << " (ascending).\n";
-    cout << "Sort time: " << fixed << setprecision(6)
+    auto end = chrono::high_resolution_clock::now();
+
+    double sortTime =
+        chrono::duration<double, milli>(end - start).count();
+
+
+    // ------------------------------------------------------------
+    // sortedBy stores the field used for sorting
+    //
+    // 1 = Age
+    // 2 = Care Type
+    // 3 = Visit Duration
+    // ------------------------------------------------------------
+    int sortedBy = fieldChoice;
+
+
+    // ------------------------------------------------------------
+    // DISPLAY SORT RESULT
+    // ------------------------------------------------------------
+    string fieldName;
+
+    if (sortedBy == 1)
+    {
+        fieldName = "Age";
+    }
+    else if (sortedBy == 2)
+    {
+        fieldName = "Care Type";
+    }
+    else
+    {
+        fieldName = "Visit Duration";
+    }
+
+    cout << "\n";
+    cout << "================================================\n";
+    cout << "          INSERTION SORT COMPLETED\n";
+    cout << "================================================\n";
+
+    cout << datasetName << " sorted by "
+         << fieldName << " (ascending).\n";
+
+    cout << "Sort time: "
+         << fixed << setprecision(6)
          << sortTime << " ms\n";
+
     display(patients);
-    cout << "Total patients: " << patients.size() << "\n";
+
+    cout << "Total patients: "
+         << patients.size() << "\n";
+
+
+    // ------------------------------------------------------------
+    // ASK WHETHER USER WANTS TO SEARCH
+    // ------------------------------------------------------------
+    cout << "\nWould you like to search this sorted dataset now? (y/n): ";
+
+    char searchNow;
+    cin >> searchNow;
+
+    if (searchNow == 'y' || searchNow == 'Y')
+    {
+        sortedSearchMethodMenu(patients, sortedBy);
+    }
 }
 
 void sortingMenu(
@@ -183,6 +243,15 @@ void sortingMenu(
                 cout << "Sort time: " << fixed << setprecision(6)
                      << sortTime << " ms\n";
                 display(*target);
+
+                cout << "\nWould you like to search this sorted dataset now? (y/n): ";
+                char searchNow;
+                cin >> searchNow;
+
+                if (searchNow == 'y' || searchNow == 'Y')
+                {
+                    sortedSearchMethodMenu(*target, fieldChoice);
+                }
                 break;
             }
 
@@ -273,7 +342,6 @@ void sortingMenu(
                 auto end = chrono::high_resolution_clock::now();
                 double sortTime = chrono::duration<double, milli>(end - start).count();
  
- 
                 cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
                 cout << "Sort time: " << fixed << setprecision(6) << sortTime
                      << " ms  (n = " << target->size() << ")\n";
@@ -284,7 +352,7 @@ void sortingMenu(
                 cin >> searchNow;
                 if (searchNow == 'y' || searchNow == 'Y')
                 {
-                    searchingMenu(facilityA, facilityB, facilityC, combined);
+                    sortedSearchMethodMenu(*target, fieldChoice);
                 }
  
                 break;
@@ -342,6 +410,7 @@ void sortingMenu(
                     combined.appendAll(facilityA);
                     combined.appendAll(facilityB);
                     combined.appendAll(facilityC);
+
                     target = &combined;
                     datasetName = "COMBINED (ALL FACILITIES)";
                 }
@@ -351,10 +420,20 @@ void sortingMenu(
                     break;
                 }
 
-                sortAndDisplayInsertionDataset(*target, datasetName, fieldChoice);
+                if (target->empty())
+                {
+                    cout << "\nSelected dataset is empty.\n";
+                    break;
+                }
+
+                sortAndDisplayInsertionDataset(
+                    *target,
+                    datasetName,
+                    fieldChoice
+                );
+
                 break;
             }
-
             case 4:
                 cout << "\nReturning to Main Menu...\n";
                 break;
