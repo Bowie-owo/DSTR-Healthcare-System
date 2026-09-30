@@ -85,26 +85,36 @@ void searchList(LinkedList& target, int searchField) {
     }
     else {
         cout << "\nVisit duration ranges:\n"
-             << "1. 1 to <6 hours\n"
-             << "2. 6 to <12 hours\n"
-             << "3. 12 to 24 hours\n"
-             << "4. >24 hours\n"
+               << "1. 1 to <6 hours (Quick observation / discharge)\n"
+               << "2. 6 to <12 hours (Short-stay / extended observation)\n"
+               << "3. 12 to <24 hours (Full day observation)\n"
+               << "4. 24 to <48 hours (1 to 2 days admitted)\n"
+               << "5. 48 to <72 hours (2 to 3 days admitted)\n"
+               << "6. 72 to <120 hours (3 to 5 days)\n"
+               << "7. >=120 hours\n"
              << "Enter your choice: ";
 
         int durationChoice;
         cin >> durationChoice;
 
-        if (durationChoice < 1 || durationChoice > 4) {
+        if (durationChoice < 1 || durationChoice > 7) {
             cout << "\nInvalid visit duration range.\n";
             return;
         }
 
-        const double minimumLengths[] = {1.0, 6.0, 12.0, 24.0};
-        const double maximumLengths[] = {
-            6.0, 12.0, 24.0, numeric_limits<double>::infinity()
+        const double minimumLengths[] = {
+            1.0, 6.0, 12.0, 24.0, 48.0, 72.0, 120.0
         };
-        const bool maximumInclusive[] = {false, false, true, false};
-        const bool minimumExclusive[] = {false, false, false, true};
+        const double maximumLengths[] = {
+            6.0, 12.0, 24.0, 48.0, 72.0, 120.0,
+            numeric_limits<double>::infinity()
+        };
+        const bool maximumInclusive[] = {
+            false, false, false, false, false, false, false
+        };
+        const bool minimumExclusive[] = {
+            false, false, false, false, false, false, false
+        };
 
         matches = displayPatientsByVisitDurationRange(
             target,
