@@ -496,9 +496,16 @@ int main() {
 
         case 10:
             cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
-            if (facilityALoaded) { cout << "\nFACILITY A\n"; careTypeAnalysis(facilityA); }
-            if (facilityBLoaded) { cout << "\nFACILITY B\n"; careTypeAnalysis(facilityB); }
-            if (facilityCLoaded) { cout << "\nFACILITY C\n"; careTypeAnalysis(facilityC); }
+            if (facilityALoaded) careTypeAnalysis(facilityA, "FACILITY A");
+            if (facilityBLoaded) careTypeAnalysis(facilityB, "FACILITY B");
+            if (facilityCLoaded) careTypeAnalysis(facilityC, "FACILITY C");
+
+            combined.clear();
+            if (facilityALoaded) combined.appendAll(facilityA);
+            if (facilityBLoaded) combined.appendAll(facilityB);
+            if (facilityCLoaded) combined.appendAll(facilityC);
+
+            careTypeAnalysis(combined, "ALL FACILITIES");
             break;
 
         case 11:
@@ -536,7 +543,7 @@ int main() {
             ageGroupAnalysis(combined);
 
             cout << "\n---------- Care Type Analysis ----------\n";
-            careTypeAnalysis(combined);
+            careTypeAnalysis(combined, "ALL FACILITIES");
 
             displayTotalBillingCost(combined, "COMBINED (ALL FACILITIES)");
             displayDatasetSummary(combined, "COMBINED (ALL FACILITIES)");
