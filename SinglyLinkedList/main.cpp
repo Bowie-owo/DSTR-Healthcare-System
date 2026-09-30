@@ -107,6 +107,26 @@ void searchList(LinkedList& target) {
     cout << "Search time: " << searchMs << " ms  (n = " << target.getSize() << ")\n";
 }
 
+void chooseSearchMethod(LinkedList& target) {
+    cout << "\nSelect a search method:\n";
+    cout << "1. Linear Search\n";
+    cout << "2. Binary Search\n";
+    cout << "Enter your choice: ";
+
+    int searchMethod;
+    cin >> searchMethod;
+
+    if (searchMethod == 1) {
+        cout << "\nLinear search is not implemented yet.\n";
+    }
+    else if (searchMethod == 2) {
+        searchList(target);
+    }
+    else {
+        cout << "\nInvalid choice.\n";
+    }
+}
+
 void ensureAllDatasetsLoaded(
     LinkedList& facilityA,
     LinkedList& facilityB,
@@ -283,7 +303,7 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                searchList(*target);
+                chooseSearchMethod(*target);
             }
 
             break;
@@ -372,7 +392,7 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                searchList(*target);
+                chooseSearchMethod(*target);
             }
             break;
         }
@@ -453,7 +473,7 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                searchList(*target);
+                chooseSearchMethod(*target);
             }
             break;
         }
