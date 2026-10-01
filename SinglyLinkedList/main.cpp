@@ -448,13 +448,14 @@ int main() {
             cout << "\n---------- Sort (Quick Sort) ----------\n";
             cout << "Sort by which field?\n";
             cout << "1. Age\n";
-            cout << "2. Visit Duration (Length of Stay)\n";
+            cout << "2. Care Type\n";
+            cout << "3. Visit Duration (Length of Stay)\n";
             cout << "Enter your choice: ";
 
             int fieldChoice;
             cin >> fieldChoice;
 
-            if (fieldChoice != 1 && fieldChoice != 2) {
+            if (fieldChoice < 1 || fieldChoice > 3) {
                 cout << "\nInvalid choice.\n";
                 break;
             }
@@ -500,11 +501,16 @@ int main() {
                 break;
             }
 
-            string fieldLabel = (fieldChoice == 1) ? "Age" : "Visit Duration";
+            string fieldLabel = (fieldChoice == 1) ? "Age" :
+                                (fieldChoice == 2) ? "Care Type" :
+                                "Visit Duration";
 
             auto start = chrono::high_resolution_clock::now();
             if (fieldChoice == 1) {
                 quickSortByAge(*target);
+            }
+            else if (fieldChoice == 2) {
+                quickSortByCareType(*target);
             }
             else {
                 quickSortByVisitDuration(*target);
@@ -523,7 +529,8 @@ int main() {
             if (searchNow == 'y' || searchNow == 'Y') {
                 chooseSearchMethod(
                     *target,
-                    fieldChoice == 1 ? 1 : 3,
+                    fieldChoice == 1 ? 1 :
+                    fieldChoice == 2 ? 2 : 3,
                     PerformanceSortMethod::Quick
                 );
             }

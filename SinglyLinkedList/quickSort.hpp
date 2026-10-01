@@ -4,10 +4,9 @@
 #include "linkedList.hpp"
 
 // Extracts the value we sort by from a patient
-typedef double (*KeyFn)(const Patient&);
-
-inline double ageKey(const Patient& p)      { return p.age; }
+inline int ageKey(const Patient& p)         { return p.age; }
 inline double stayKey(const Patient& p)     { return p.lengthOfStay; }
+inline string careTypeKey(const Patient& p) { return p.careType; }
 
 // Appends node to the end of a chain tracked by head/tail
 inline void appendNode(Node*& head, Node*& tail, Node* node)
@@ -19,6 +18,7 @@ inline void appendNode(Node*& head, Node*& tail, Node* node)
 
 // Sorts the chain starting at 'head' and returns the new head.
 // 'tailOut' receives the last node of the sorted chain.
+template <typename KeyFn>
 inline Node* quickSortChain(Node* head, Node*& tailOut, KeyFn key)
 {
     if (head == nullptr || head->next == nullptr)
@@ -35,7 +35,7 @@ inline Node* quickSortChain(Node* head, Node*& tailOut, KeyFn key)
         slow = slow->next;
         fast = fast->next->next;
     }
-    double pivotKey = key(slow->data);
+    auto pivotKey = key(slow->data);
 
     // Three-way partition: less / equal / greater
     Node *lessHead = nullptr,  *lessTail = nullptr;
@@ -46,7 +46,7 @@ inline Node* quickSortChain(Node* head, Node*& tailOut, KeyFn key)
     while (current != nullptr)
     {
         Node* nextNode = current->next;
-        double k = key(current->data);
+        auto k = key(current->data);
 
         if (k < pivotKey)       appendNode(lessHead, lessTail, current);
         else if (k > pivotKey)  appendNode(greatHead, greatTail, current);
@@ -85,6 +85,12 @@ inline void quickSortByVisitDuration(LinkedList& list)
 {
     Node* tail = nullptr;
     list.getHead() = quickSortChain(list.getHead(), tail, stayKey);
+}
+
+inline void quickSortByCareType(LinkedList& list)
+{
+    Node* tail = nullptr;
+    list.getHead() = quickSortChain(list.getHead(), tail, careTypeKey);
 }
 
 #endif
