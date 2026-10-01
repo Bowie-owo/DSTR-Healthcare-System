@@ -165,6 +165,8 @@ public:
              << endl;
         cout << "================================================================================\n";
 
+        cout << fixed << setprecision(2);
+
         while (current != nullptr) {
 
             cout << left
@@ -172,7 +174,7 @@ public:
                  << setw(8)  << current->data.age
                  << setw(18) << current->data.careType
                  << setw(12) << current->data.lengthOfStay
-                 << setw(12) << fixed << setprecision(2)
+                 << setw(12)
                  << current->data.baseCostPerHour
                  << setw(12) << current->data.daysVisitsPerYear
                  << endl;

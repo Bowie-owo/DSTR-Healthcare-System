@@ -1,5 +1,7 @@
 #include <iostream>
 #include <cstdlib>
+#include <chrono>
+#include <string>
 
 using namespace std;
 
@@ -30,12 +32,26 @@ int main() {
 
         case 1:
             cout << "\nOpening Array...\n";
-            system("cd Array && main.exe");
+            {
+                string executable = "%TEMP%\\MetroHealthArray_" +
+                    to_string(chrono::steady_clock::now().time_since_epoch().count()) +
+                    ".exe";
+                string command = "cd Array && g++ main.cpp -o \"" + executable +
+                    "\" && \"" + executable + "\" && del \"" + executable + "\"";
+                system(command.c_str());
+            }
             break;
 
         case 2:
             cout << "\nOpening Singly Linked List...\n";
-            system("cd SinglyLinkedList && main.exe");
+            {
+                string executable = "%TEMP%\\MetroHealthSinglyLinkedList_" +
+                    to_string(chrono::steady_clock::now().time_since_epoch().count()) +
+                    ".exe";
+                string command = "cd SinglyLinkedList && g++ main.cpp -o \"" + executable +
+                    "\" && \"" + executable + "\" && del \"" + executable + "\"";
+                system(command.c_str());
+            }
             break;
 
         case 3:
