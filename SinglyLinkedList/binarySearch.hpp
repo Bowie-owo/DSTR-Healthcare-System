@@ -4,6 +4,7 @@
 #include "linkedList.hpp"
 #include "utils.hpp"
 #include <iostream>
+#include <limits>
 #include <string>
 
 // Binary search on a linked list uses a node at a calculated position as its
@@ -52,6 +53,23 @@ inline int firstCareTypeAtLeast(const LinkedList& list, const string& careType) 
 	return low;
 }
 
+inline int firstLengthOfStayAtLeast(const LinkedList& list, double minimumLength) {
+	int low = 0;
+	int high = list.getSize();
+
+	while (low < high) {
+		int middle = low + (high - low) / 2;
+		const Node* middleNode = nodeAt(list, middle);
+
+		if (middleNode->data.lengthOfStay < minimumLength)
+			low = middle + 1;
+		else
+			high = middle;
+	}
+
+	return low;
+}
+
 inline int displayPatientsInAgeGroup(const LinkedList& list,
 									 int minimumAge,
 									 int maximumAge) {
@@ -82,6 +100,34 @@ inline int displayPatientsByCareType(const LinkedList& list,
 
 		cout << patient->data.patientID << " | Age: " << patient->data.age
 			 << " | Care Type: " << patient->data.careType << endl;
+		matches++;
+	}
+
+	return matches;
+}
+
+inline int displayPatientsByVisitDurationRange(const LinkedList& list,
+										  double minimumLength,
+										  double maximumLength,
+										  bool maximumInclusive,
+										  bool minimumExclusive) {
+	int first = firstLengthOfStayAtLeast(list, minimumLength);
+	int matches = 0;
+
+	for (int index = first; index < list.getSize(); index++) {
+		const Node* patient = nodeAt(list, index);
+		double lengthOfStay = patient->data.lengthOfStay;
+
+		if (minimumExclusive && lengthOfStay <= minimumLength)
+			continue;
+
+		if (lengthOfStay > maximumLength ||
+			(!maximumInclusive && lengthOfStay >= maximumLength))
+			break;
+
+		cout << patient->data.patientID << " | Age: " << patient->data.age
+			 << " | Care Type: " << patient->data.careType
+			 << " | Visit Duration: " << lengthOfStay << " hours" << endl;
 		matches++;
 	}
 

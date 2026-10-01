@@ -37,20 +37,7 @@ void displayMenu() {
     cout << "Enter your choice: ";
 }
 
-void searchList(LinkedList& target) {
-    cout << "\nSearch by which field?\n";
-    cout << "1. Age Group\n";
-    cout << "2. Care Type\n";
-    cout << "Enter your choice: ";
-
-    int searchField;
-    cin >> searchField;
-
-    if (searchField != 1 && searchField != 2) {
-        cout << "\nInvalid choice.\n";
-        return;
-    }
-
+void searchList(LinkedList& target, int searchField) {
     int matches = 0;
     auto searchStart = chrono::high_resolution_clock::now();
 
@@ -73,12 +60,10 @@ void searchList(LinkedList& target) {
             return;
         }
 
-        // Option 5 may already have sorted by age; sorting again is harmless.
-        bubbleSortByAge(target);
         matches = displayPatientsInAgeGroup(
             target, minimumAges[groupChoice - 1], maximumAges[groupChoice - 1]);
     }
-    else {
+    else if (searchField == 2) {
         cout << "\nCare types:\n"
              << "1. Emergency\n2. Inpatient\n3. Outpatient\n"
              << "4. Rehabilitation\n5. Routine checkup\n6. Vaccination\n"
@@ -96,8 +81,47 @@ void searchList(LinkedList& target) {
             return;
         }
 
-        bubbleSortByCareType(target);
         matches = displayPatientsByCareType(target, careTypes[careChoice - 1]);
+    }
+    else {
+        cout << "\nVisit duration ranges:\n"
+               << "1. 1 to <6 hours (Quick observation / discharge)\n"
+               << "2. 6 to <12 hours (Short-stay / extended observation)\n"
+               << "3. 12 to <24 hours (Full day observation)\n"
+               << "4. 24 to <48 hours (1 to 2 days admitted)\n"
+               << "5. 48 to <72 hours (2 to 3 days admitted)\n"
+               << "6. 72 to <120 hours (3 to 5 days)\n"
+               << "7. >=120 hours\n"
+             << "Enter your choice: ";
+
+        int durationChoice;
+        cin >> durationChoice;
+
+        if (durationChoice < 1 || durationChoice > 7) {
+            cout << "\nInvalid visit duration range.\n";
+            return;
+        }
+
+        const double minimumLengths[] = {
+            1.0, 6.0, 12.0, 24.0, 48.0, 72.0, 120.0
+        };
+        const double maximumLengths[] = {
+            6.0, 12.0, 24.0, 48.0, 72.0, 120.0,
+            numeric_limits<double>::infinity()
+        };
+        const bool maximumInclusive[] = {
+            false, false, false, false, false, false, false
+        };
+        const bool minimumExclusive[] = {
+            false, false, false, false, false, false, false
+        };
+
+        matches = displayPatientsByVisitDurationRange(
+            target,
+            minimumLengths[durationChoice - 1],
+            maximumLengths[durationChoice - 1],
+            maximumInclusive[durationChoice - 1],
+            minimumExclusive[durationChoice - 1]);
     }
 
     auto searchEnd = chrono::high_resolution_clock::now();
@@ -105,6 +129,26 @@ void searchList(LinkedList& target) {
 
     cout << "\nBinary search found " << matches << " matching patient(s).\n";
     cout << "Search time: " << searchMs << " ms  (n = " << target.getSize() << ")\n";
+}
+
+void chooseSearchMethod(LinkedList& target, int searchField) {
+    cout << "\nSelect a search method:\n";
+    cout << "1. Linear Search\n";
+    cout << "2. Binary Search\n";
+    cout << "Enter your choice: ";
+
+    int searchMethod;
+    cin >> searchMethod;
+
+    if (searchMethod == 1) {
+        cout << "\nLinear search is not implemented yet.\n";
+    }
+    else if (searchMethod == 2) {
+        searchList(target, searchField);
+    }
+    else {
+        cout << "\nInvalid choice.\n";
+    }
 }
 
 void ensureAllDatasetsLoaded(
@@ -288,7 +332,7 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                searchList(*target);
+                chooseSearchMethod(*target, fieldChoice == 1 ? 1 : 3);
             }
 
             break;
@@ -377,7 +421,7 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                searchList(*target);
+                chooseSearchMethod(*target, fieldChoice);
             }
             break;
         }
@@ -458,7 +502,7 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                searchList(*target);
+                chooseSearchMethod(*target, fieldChoice == 1 ? 1 : 3);
             }
             break;
         }
@@ -501,9 +545,16 @@ int main() {
 
         case 10:
             cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
-            if (facilityALoaded) { cout << "\nFACILITY A\n"; careTypeAnalysis(facilityA); }
-            if (facilityBLoaded) { cout << "\nFACILITY B\n"; careTypeAnalysis(facilityB); }
-            if (facilityCLoaded) { cout << "\nFACILITY C\n"; careTypeAnalysis(facilityC); }
+            if (facilityALoaded) careTypeAnalysis(facilityA, "FACILITY A");
+            if (facilityBLoaded) careTypeAnalysis(facilityB, "FACILITY B");
+            if (facilityCLoaded) careTypeAnalysis(facilityC, "FACILITY C");
+
+            combined.clear();
+            if (facilityALoaded) combined.appendAll(facilityA);
+            if (facilityBLoaded) combined.appendAll(facilityB);
+            if (facilityCLoaded) combined.appendAll(facilityC);
+
+            careTypeAnalysis(combined, "ALL FACILITIES");
             break;
 
         case 11:
@@ -518,6 +569,11 @@ int main() {
             if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
             if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
             if (facilityCLoaded) displayDatasetSummary(facilityC, "FACILITY C");
+            combined.clear();
+            if (facilityALoaded) combined.appendAll(facilityA);
+            if (facilityBLoaded) combined.appendAll(facilityB);
+            if (facilityCLoaded) combined.appendAll(facilityC);
+            displayDatasetSummary(combined, "COMBINED (A + B + C)");
             break;
 
         case 13:
@@ -536,7 +592,7 @@ int main() {
             ageGroupAnalysis(combined);
 
             cout << "\n---------- Care Type Analysis ----------\n";
-            careTypeAnalysis(combined);
+            careTypeAnalysis(combined, "ALL FACILITIES");
 
             displayTotalBillingCost(combined, "COMBINED (ALL FACILITIES)");
             displayDatasetSummary(combined, "COMBINED (ALL FACILITIES)");
