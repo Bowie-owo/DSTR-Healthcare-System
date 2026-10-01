@@ -6,6 +6,7 @@
 #include <iomanip>
 #include <string>
 #include <chrono>
+#include <limits>
 
 using namespace std;
 
@@ -145,6 +146,40 @@ inline int linearSearchByVisitsPerYear(const LinkedList& list,
 
 
 // ================================================================
+// LINEAR SEARCH BY VISIT DURATION RANGE
+// ================================================================
+
+inline int linearSearchByVisitDurationRange(const LinkedList& list,
+                                            double minimumLength,
+                                            double maximumLength)
+{
+    int matches = 0;
+
+    const Node* current = list.getHead();
+
+    while (current != nullptr)
+    {
+        double lengthOfStay = current->data.lengthOfStay;
+
+        if (lengthOfStay >= minimumLength && lengthOfStay < maximumLength)
+        {
+            if (matches == 0)
+            {
+                displayLinearSearchHeader();
+            }
+
+            displayLinearSearchPatient(current);
+            matches++;
+        }
+
+        current = current->next;
+    }
+
+    return matches;
+}
+
+
+// ================================================================
 // AGE GROUP MENU
 // ================================================================
 
@@ -243,6 +278,108 @@ inline int linearSearchVisitsMenu(const LinkedList& list)
         list,
         visitsPerYear
     );
+}
+
+
+// ================================================================
+// VISIT DURATION RANGE MENU
+// ================================================================
+
+inline int linearSearchVisitDurationMenu(const LinkedList& list)
+{
+    cout << "\n";
+    cout << "Visit duration ranges:\n"
+         << "1. 1 to <6 hours\n"
+         << "2. 6 to <12 hours\n"
+         << "3. 12 to <24 hours\n"
+         << "4. 24 to <48 hours\n"
+         << "5. 48 to <72 hours\n"
+         << "6. 72 to <120 hours\n"
+         << "7. >=120 hours\n"
+         << "Enter your choice: ";
+
+    int durationChoice;
+    cin >> durationChoice;
+
+    if (durationChoice < 1 || durationChoice > 7)
+    {
+        cout << "\nInvalid visit duration range.\n";
+        return -1;
+    }
+
+    const double minimumLengths[] = {
+        1.0, 6.0, 12.0, 24.0, 48.0, 72.0, 120.0
+    };
+    const double maximumLengths[] = {
+        6.0, 12.0, 24.0, 48.0, 72.0, 120.0,
+        numeric_limits<double>::infinity()
+    };
+
+    return linearSearchByVisitDurationRange(
+        list,
+        minimumLengths[durationChoice - 1],
+        maximumLengths[durationChoice - 1]
+    );
+}
+
+
+// ================================================================
+// LINEAR SEARCH USING THE SORTED FIELD
+// ================================================================
+
+inline void linearSearchSortedFieldMenu(const LinkedList& list,
+                                        int sortedField)
+{
+    auto searchStart = chrono::high_resolution_clock::now();
+    int matches = 0;
+
+    if (sortedField == 1)
+    {
+        matches = linearSearchAgeGroupMenu(list);
+    }
+    else if (sortedField == 2)
+    {
+        matches = linearSearchCareTypeMenu(list);
+    }
+    else if (sortedField == 3)
+    {
+        matches = linearSearchVisitDurationMenu(list);
+    }
+    else
+    {
+        cout << "\nInvalid sorted field.\n";
+        return;
+    }
+
+    if (matches == -1)
+    {
+        return;
+    }
+
+    auto searchEnd = chrono::high_resolution_clock::now();
+    double searchMs = chrono::duration<double, milli>(
+        searchEnd - searchStart
+    ).count();
+
+    cout << "\n";
+    if (matches == 0)
+    {
+        cout << "No matching patient(s) found.\n";
+    }
+    else
+    {
+        cout << "==========================================================================\n";
+        cout << "Linear search found "
+             << matches
+             << " matching patient(s).\n";
+    }
+
+    cout << "Search time: "
+         << fixed << setprecision(6)
+         << searchMs
+         << " ms  (n = "
+         << list.getSize()
+         << ")\n";
 }
 
 

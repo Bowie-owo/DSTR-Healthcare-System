@@ -141,7 +141,7 @@ void chooseSearchMethod(LinkedList& target, int searchField) {
     cin >> searchMethod;
 
     if (searchMethod == 1) {
-        cout << "\nLinear search is not implemented yet.\n";
+        linearSearchSortedFieldMenu(target, searchField);
     }
     else if (searchMethod == 2) {
         searchList(target, searchField);
@@ -332,7 +332,7 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                chooseSearchMethod(*target, fieldChoice == 1 ? 1 : 3);
+                chooseSearchMethod(*target, fieldChoice);
             }
 
             break;
