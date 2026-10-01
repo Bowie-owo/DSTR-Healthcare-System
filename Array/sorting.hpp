@@ -7,12 +7,12 @@
 #include <string>
 #include "patient.hpp"
 #include "array.hpp"
-#include "searching.hpp"
 #include "bubbleSort.hpp"
 #include "quickSort.hpp"
 #include "insertionSort.hpp"
 #include "helpers.hpp"
 #include "searchingSort.hpp"
+#include "performanceMetrics.hpp"
 
 
 using namespace std;
@@ -52,6 +52,8 @@ void sortAndDisplayInsertionDataset(
 
     double sortTime =
         chrono::duration<double, milli>(end - start).count();
+
+    arrayPerformance.insertionSort = sortTime;
 
 
     // ------------------------------------------------------------
@@ -110,6 +112,7 @@ void sortAndDisplayInsertionDataset(
 
     if (searchNow == 'y' || searchNow == 'Y')
     {
+        arrayPerformance.sortedSortMethod = ArraySortMethod::Insertion;
         sortedSearchMethodMenu(patients, sortedBy);
     }
 }
@@ -229,6 +232,8 @@ void sortingMenu(
                 auto end = chrono::high_resolution_clock::now();
                 double sortTime = chrono::duration<double, milli>(end - start).count();
 
+                arrayPerformance.bubbleSort = sortTime;
+
                 target->clear();
                 for (int i = 0; i < bubbleArray.getSize(); i++)
                 {
@@ -250,6 +255,7 @@ void sortingMenu(
 
                 if (searchNow == 'y' || searchNow == 'Y')
                 {
+                    arrayPerformance.sortedSortMethod = ArraySortMethod::Bubble;
                     sortedSearchMethodMenu(*target, fieldChoice);
                 }
                 break;
@@ -341,6 +347,8 @@ void sortingMenu(
                 }
                 auto end = chrono::high_resolution_clock::now();
                 double sortTime = chrono::duration<double, milli>(end - start).count();
+
+                arrayPerformance.quickSort = sortTime;
  
                 cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
                 cout << "Sort time: " << fixed << setprecision(6) << sortTime
@@ -352,6 +360,7 @@ void sortingMenu(
                 cin >> searchNow;
                 if (searchNow == 'y' || searchNow == 'Y')
                 {
+                    arrayPerformance.sortedSortMethod = ArraySortMethod::Quick;
                     sortedSearchMethodMenu(*target, fieldChoice);
                 }
  

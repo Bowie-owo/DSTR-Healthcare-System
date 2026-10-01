@@ -5,6 +5,7 @@
 #include <chrono>
 #include <iomanip>
 #include "patient.hpp"
+#include "performanceMetrics.hpp"
 #include "array.hpp"
 
 using namespace std;
@@ -39,6 +40,8 @@ inline void printLinearSearchSummary(
     cout << "Linear Search time: "
          << fixed << setprecision(6)
          << searchTime << " ms\n";
+
+    recordArraySortedLinearSearch(searchTime);
 }
 
 inline void sortedLinearSearchByAge(

@@ -8,12 +8,13 @@
 #include "ageGroupAnalysis.hpp"
 #include "billingAnalysis.hpp"
 #include "careTypeAnalysis.hpp"
-#include "searching.hpp"
+#include "linearSearch.hpp"
 #include "sorting.hpp"
 #include "analysis.hpp"
 #include "array.hpp"
 #include "helpers.hpp"
 #include "utils.hpp"
+#include "performanceTest.hpp"
 
 using namespace std;
 
@@ -29,7 +30,7 @@ void displayMenu() {
 	cout << "3. Load and Display Facility C\n";
 	cout << "4. Load and Display All Datasets\n";
 	cout << "5. Sorting\n";
-	cout << "6. Searching\n";
+	cout << "6. Linear Search\n";
 	cout << "7. Analysis\n";
     cout << "8. Dataset Summary - jiahuey \n";
     cout << "9. Performance Summary (Comparison View) - sinyi\n";
@@ -252,7 +253,7 @@ int main() {
 
             buildCombined(facilityA, facilityB, facilityC, combined);
 
-            searchingMenu(facilityA, facilityB, facilityC, combined);
+            linearSearchMenu(facilityA, facilityB, facilityC, combined);
 
             break;
         }
@@ -305,7 +306,7 @@ int main() {
 
         // Performance Summary
         case 9:
-            cout << "\nThis feature is not implemented yet.\n";
+            displayArrayPerformance();
             break;
 
         case 10:

@@ -9,6 +9,7 @@
 
 #include "patient.hpp"
 #include "array.hpp"
+#include "performanceMetrics.hpp"
 
 using namespace std;
 
@@ -153,6 +154,8 @@ void searchByAgeGroup(const DynamicArray<Patient>& patients)
 
     double searchTime =
         chrono::duration<double, milli>(end - start).count();
+
+    recordArrayUnsortedLinearSearch(searchTime);
 
 
     // ------------------------------------------------------------
@@ -306,6 +309,8 @@ void searchByCareType(const DynamicArray<Patient>& patients)
     double searchTime =
         chrono::duration<double, milli>(end - start).count();
 
+    recordArrayUnsortedLinearSearch(searchTime);
+
 
     // ------------------------------------------------------------
     // DISPLAY RESULT
@@ -361,25 +366,53 @@ void searchByCareType(const DynamicArray<Patient>& patients)
 
 
 // ================================================================
-// LINEAR SEARCH BY VISITS PER YEAR
+// LINEAR SEARCH BY VISIT DURATION
 // ================================================================
 
 void searchByVisitDuration(const DynamicArray<Patient>& patients)
 {
-    int targetVisits;
+    int choice;
 
     cout << "\n";
     cout << "================================================\n";
-    cout << "          SEARCH BY VISITS PER YEAR\n";
+    cout << "       SEARCH BY VISIT DURATION (HOURS)\n";
     cout << "================================================\n";
-    cout << "Enter number of visits per year: ";
-    cin >> targetVisits;
+    cout << "1. <20\n";
+    cout << "2. 20 - 60\n";
+    cout << "3. 61-100\n";
+    cout << "4. >101\n";
+    cout << "Choice: ";
+    cin >> choice;
 
+    double minimumDuration;
+    double maximumDuration;
+    string durationCategory;
 
-    if (targetVisits < 0)
+    switch (choice)
     {
-        cout << "\nInvalid number of visits.\n";
-        return;
+        case 1:
+            minimumDuration = 0;
+            maximumDuration = 19.999999;
+            durationCategory = "Below 20 hours";
+            break;
+        case 2:
+            minimumDuration = 20;
+            maximumDuration = 60;
+            durationCategory = "20 - 60 hours";
+            break;
+        case 3:
+            minimumDuration = 61;
+            maximumDuration = 100;
+            durationCategory = "61 - 100 hours";
+            break;
+        case 4:
+            minimumDuration = 101;
+            maximumDuration = 1.0e100;
+            durationCategory = "Above 101 hours";
+            break;
+        default:
+            cout << "\nInvalid choice.\n";
+            return;
     }
 
 
@@ -394,12 +427,13 @@ void searchByVisitDuration(const DynamicArray<Patient>& patients)
 
 
     // ------------------------------------------------------------
-    // LINEAR SEARCH
+    // LINEAR SEARCH BY VISIT DURATION RANGE
     // ------------------------------------------------------------
 
     for (int i = 0; i < patients.size(); i++)
     {
-        if (patients[i].daysVisitsPerYear == targetVisits)
+        if (patients[i].lengthOfStay >= minimumDuration &&
+            patients[i].lengthOfStay <= maximumDuration)
         {
             foundCount++;
         }
@@ -416,6 +450,8 @@ void searchByVisitDuration(const DynamicArray<Patient>& patients)
     double searchTime =
         chrono::duration<double, milli>(end - start).count();
 
+    recordArrayUnsortedLinearSearch(searchTime);
+
 
     // ------------------------------------------------------------
     // DISPLAY RESULT
@@ -426,8 +462,10 @@ void searchByVisitDuration(const DynamicArray<Patient>& patients)
     cout << "             LINEAR SEARCH RESULT\n";
     cout << "================================================\n";
 
-    cout << "Search Field : Visits Per Year\n";
-    cout << "Target Visits: " << targetVisits << endl;
+        cout << "Search Field : Visit Duration\n";
+        cout << "Category     : " << durationCategory << endl;
+        cout << "Duration Range: " << minimumDuration
+            << " - " << maximumDuration << " hours\n";
 
 
     if (foundCount > 0)
@@ -443,7 +481,8 @@ void searchByVisitDuration(const DynamicArray<Patient>& patients)
 
         for (int i = 0; i < patients.size(); i++)
         {
-            if (patients[i].daysVisitsPerYear == targetVisits)
+            if (patients[i].lengthOfStay >= minimumDuration &&
+                patients[i].lengthOfStay <= maximumDuration)
             {
                 displaySearchResult(patients[i]);
             }

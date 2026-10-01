@@ -8,6 +8,7 @@
 
 #include "array.hpp"
 #include "patient.hpp"
+#include "performanceMetrics.hpp"
 
 using namespace std;
 
@@ -40,6 +41,8 @@ inline void printBinarySearchSummary(
     cout << "Binary Search time: "
          << fixed << setprecision(6)
          << searchTime << " ms\n";
+
+    recordArraySortedBinarySearch(searchTime);
 }
 
 inline int firstAgeAtLeast(
