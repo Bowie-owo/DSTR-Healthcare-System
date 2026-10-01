@@ -9,6 +9,7 @@
 #include "careTypeAnalysis.hpp"
 #include "billingAnalysis.hpp"
 #include "linearSearch.hpp"
+#include "performanceTest.hpp"
 
 using namespace std;
 
@@ -32,7 +33,8 @@ void displayMenu() {
     cout << "11. Total Billing Cost (Per Facility)\n";
     cout << "12. Dataset Summary (Per Facility)\n";
     cout << "13. Combined Analysis (All Facilities)\n";
-    cout << "14. Exit\n";
+    cout << "14. Performance Summary\n";
+    cout << "15. Exit\n";
     cout << "================================================\n";
     cout << "Enter your choice: ";
 }
@@ -129,9 +131,13 @@ void searchList(LinkedList& target, int searchField) {
 
     cout << "\nBinary search found " << matches << " matching patient(s).\n";
     cout << "Search time: " << searchMs << " ms  (n = " << target.getSize() << ")\n";
+
+    recordSortedBinarySearch(searchMs);
 }
 
-void chooseSearchMethod(LinkedList& target, int searchField) {
+void chooseSearchMethod(LinkedList& target,
+                        int searchField,
+                        PerformanceSortMethod sortedMethod) {
     cout << "\nSelect a search method:\n";
     cout << "1. Linear Search\n";
     cout << "2. Binary Search\n";
@@ -139,6 +145,8 @@ void chooseSearchMethod(LinkedList& target, int searchField) {
 
     int searchMethod;
     cin >> searchMethod;
+
+    sessionPerformance.sortedSearchMethod = sortedMethod;
 
     if (searchMethod == 1) {
         linearSearchSortedFieldMenu(target, searchField);
@@ -190,7 +198,7 @@ int main() {
         displayMenu();
         cin >> choice;
 
-        if (choice >= 5 && choice <= 13) {
+        if (choice >= 5 && choice <= 14) {
             ensureAllDatasetsLoaded(
                 facilityA,
                 facilityB,
@@ -323,6 +331,7 @@ int main() {
             }
             auto end = chrono::high_resolution_clock::now();
             double ms = chrono::duration<double, milli>(end - start).count();
+            sessionPerformance.bubbleSort = ms;
 
             cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
             cout << "Sort time: " << ms << " ms  (n = " << target->getSize() << ")\n";
@@ -332,7 +341,11 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                chooseSearchMethod(*target, fieldChoice);
+                chooseSearchMethod(
+                    *target,
+                    fieldChoice,
+                    PerformanceSortMethod::Bubble
+                );
             }
 
             break;
@@ -411,6 +424,7 @@ int main() {
 
             auto end = chrono::high_resolution_clock::now();
             double ms = chrono::duration<double, milli>(end - start).count();
+            sessionPerformance.insertionSort = ms;
 
             cout << "\n========== DATASET: " << label << " ==========\n";
             cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
@@ -421,7 +435,11 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                chooseSearchMethod(*target, fieldChoice);
+                chooseSearchMethod(
+                    *target,
+                    fieldChoice,
+                    PerformanceSortMethod::Insertion
+                );
             }
             break;
         }
@@ -493,6 +511,7 @@ int main() {
             }
             auto end = chrono::high_resolution_clock::now();
             double ms = chrono::duration<double, milli>(end - start).count();
+            sessionPerformance.quickSort = ms;
 
             cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
             cout << "Sort time: " << ms << " ms  (n = " << target->getSize() << ")\n";
@@ -502,7 +521,11 @@ int main() {
             char searchNow;
             cin >> searchNow;
             if (searchNow == 'y' || searchNow == 'Y') {
-                chooseSearchMethod(*target, fieldChoice == 1 ? 1 : 3);
+                chooseSearchMethod(
+                    *target,
+                    fieldChoice == 1 ? 1 : 3,
+                    PerformanceSortMethod::Quick
+                );
             }
             break;
         }
@@ -597,8 +620,12 @@ int main() {
             displayTotalBillingCost(combined, "COMBINED (ALL FACILITIES)");
             displayDatasetSummary(combined, "COMBINED (ALL FACILITIES)");
             break;
-
+        
         case 14:
+            displaySinglyLinkedListPerformance();
+            break;
+
+        case 15:
             cout << "\nExiting MetroHealth System...\n";
             break;
 
@@ -608,7 +635,7 @@ int main() {
 
         cout << "\n\n\n\n\n";
 
-    } while (choice != 14);
+    } while (choice != 15);
 
     return 0;
 }

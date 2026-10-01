@@ -7,6 +7,7 @@
 #include <string>
 #include <chrono>
 #include <limits>
+#include "performanceMetrics.hpp"
 
 using namespace std;
 
@@ -380,6 +381,8 @@ inline void linearSearchSortedFieldMenu(const LinkedList& list,
          << " ms  (n = "
          << list.getSize()
          << ")\n";
+
+    recordSortedLinearSearch(searchMs);
 }
 
 
@@ -443,6 +446,8 @@ inline void linearSearchFieldMenu(const LinkedList& list)
             chrono::duration<double, milli>(
                 searchEnd - searchStart
             ).count();
+
+        sessionPerformance.linearUnsorted = searchMs;
 
         cout << "\n";
 
