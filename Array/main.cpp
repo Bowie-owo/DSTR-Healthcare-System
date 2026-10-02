@@ -318,6 +318,7 @@ int main() {
         }
             } while (choice != 10);
 
+            saveArrayPerformanceSnapshot();
             return 0;
             
         }

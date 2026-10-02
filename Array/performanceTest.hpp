@@ -3,6 +3,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <fstream>
 #include <string>
 
 #include "performanceMetrics.hpp"
@@ -61,6 +62,25 @@ inline void displayArrayPerformance()
     cout << "\nReminder: complete the sorting and searching options first.\n";
     cout << "Only operations completed in this session have recorded times; others show 0.00 ms.\n";
     displayArrayPerformanceSummary(arrayPerformance);
+}
+
+inline void saveArrayPerformanceSnapshot()
+{
+     std::ofstream file("../array_performance_snapshot.txt");
+     if (!file.is_open()) {
+          return;
+     }
+
+     file << arrayPerformance.bubbleSort << ' '
+           << arrayPerformance.insertionSort << ' '
+           << arrayPerformance.quickSort << ' '
+           << arrayPerformance.bubbleLinearSorted << ' '
+           << arrayPerformance.insertionLinearSorted << ' '
+           << arrayPerformance.quickLinearSorted << ' '
+           << arrayPerformance.bubbleBinarySorted << ' '
+           << arrayPerformance.insertionBinarySorted << ' '
+           << arrayPerformance.quickBinarySorted << ' '
+           << arrayPerformance.linearUnsorted << '\n';
 }
 
 #endif

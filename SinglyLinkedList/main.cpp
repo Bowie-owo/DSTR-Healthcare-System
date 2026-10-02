@@ -691,5 +691,6 @@ int main() {
 
     } while (choice != 10);
 
+    saveSinglyLinkedListPerformanceSnapshot();
     return 0;
 }

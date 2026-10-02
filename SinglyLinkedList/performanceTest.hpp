@@ -3,6 +3,7 @@
 
 #include <iomanip>
 #include <iostream>
+#include <fstream>
 
 #include "performanceMetrics.hpp"
 
@@ -49,6 +50,26 @@ inline void displaySinglyLinkedListPerformance()
 	std::cout << "\nReminder: complete the sorting and searching options first.\n";
 	std::cout << "Only operations completed in this session have recorded times; others show 0.00 ms.\n";
 	displaySinglyLinkedListSummary(getSessionPerformance());
+}
+
+inline void saveSinglyLinkedListPerformanceSnapshot()
+{
+	const SessionPerformance& performance = getSessionPerformance();
+	std::ofstream file("../singly_linked_list_performance_snapshot.txt");
+	if (!file.is_open()) {
+		return;
+	}
+
+	file << performance.bubbleSort << ' '
+		 << performance.insertionSort << ' '
+		 << performance.quickSort << ' '
+		 << performance.bubbleLinearSorted << ' '
+		 << performance.insertionLinearSorted << ' '
+		 << performance.quickLinearSorted << ' '
+		 << performance.bubbleBinarySorted << ' '
+		 << performance.insertionBinarySorted << ' '
+		 << performance.quickBinarySorted << ' '
+		 << performance.linearUnsorted << '\n';
 }
 
 #endif
