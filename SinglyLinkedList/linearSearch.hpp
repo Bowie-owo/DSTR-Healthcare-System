@@ -392,85 +392,76 @@ inline void linearSearchSortedFieldMenu(const LinkedList& list,
 
 inline void linearSearchFieldMenu(const LinkedList& list)
 {
-    while (true)
+    cout << "\n";
+    cout << "Search by which field?\n";
+    cout << "1. Age Group\n";
+    cout << "2. Care Type\n";
+    cout << "3. Search by Visit Duration / Visits Per Year\n";
+    cout << "Enter your choice: ";
+
+    int searchField;
+    cin >> searchField;
+
+    if (searchField < 1 || searchField > 3)
     {
-        cout << "\n";
-        cout << "Search by which field?\n";
-        cout << "1. Age Group\n";
-        cout << "2. Care Type\n";
-        cout << "3. Search by Visit Duration / Visits Per Year\n";
-        cout << "4. Back to Main Menu\n";
-        cout << "Enter your choice: ";
-
-        int searchField;
-        cin >> searchField;
-
-        if (searchField == 4)
-        {
-            return;
-        }
-
-        if (searchField < 1 || searchField > 4)
-        {
-            cout << "\nInvalid choice.\n";
-            continue;
-        }
-
-        int matches = 0;
-
-        // Start timing only when the actual search begins
-        auto searchStart = chrono::high_resolution_clock::now();
-
-        if (searchField == 1)
-        {
-            matches = linearSearchAgeGroupMenu(list);
-        }
-        else if (searchField == 2)
-        {
-            matches = linearSearchCareTypeMenu(list);
-        }
-        else if (searchField == 3)
-        {
-            matches = linearSearchVisitsMenu(list);
-        }
-
-        auto searchEnd = chrono::high_resolution_clock::now();
-
-        // If invalid input was returned from a search menu
-        if (matches == -1)
-        {
-            continue;
-        }
-
-        double searchMs =
-            chrono::duration<double, milli>(
-                searchEnd - searchStart
-            ).count();
-
-        sessionPerformance.linearUnsorted = searchMs;
-
-        cout << "\n";
-
-        if (matches == 0)
-        {
-            cout << "No matching patient(s) found.\n";
-        }
-        else
-        {
-            cout << "==========================================================================\n";
-            cout << "Linear search found "
-                 << matches
-                 << " matching patient(s).\n";
-        }
-
-        cout << "Search time: "
-             << fixed << setprecision(6)
-             << searchMs
-             << " ms"
-             << "  (n = "
-             << list.getSize()
-             << ")\n";
+        cout << "\nInvalid choice. Returning to the main menu.\n";
+        return;
     }
+
+    int matches = 0;
+
+    // Start timing only when the actual search begins
+    auto searchStart = chrono::high_resolution_clock::now();
+
+    if (searchField == 1)
+    {
+        matches = linearSearchAgeGroupMenu(list);
+    }
+    else if (searchField == 2)
+    {
+        matches = linearSearchCareTypeMenu(list);
+    }
+    else
+    {
+        matches = linearSearchVisitsMenu(list);
+    }
+
+    auto searchEnd = chrono::high_resolution_clock::now();
+
+    // If invalid input was returned from a search menu, return to the main menu.
+    if (matches == -1)
+    {
+        return;
+    }
+
+    double searchMs =
+        chrono::duration<double, milli>(
+            searchEnd - searchStart
+        ).count();
+
+    getSessionPerformance().linearUnsorted = searchMs;
+
+    cout << "\n";
+
+    if (matches == 0)
+    {
+        cout << "No matching patient(s) found.\n";
+    }
+    else
+    {
+        cout << "==========================================================================\n";
+        cout << "Linear search found "
+             << matches
+             << " matching patient(s).\n";
+    }
+
+    cout << "Search time: "
+         << fixed << setprecision(6)
+         << searchMs
+         << " ms"
+         << "  (n = "
+         << list.getSize()
+         << ")\n";
 }
 
 
@@ -580,6 +571,7 @@ inline void linearSearchMenu(
         }
 
         linearSearchFieldMenu(*target);
+        return;
     }
 }
 

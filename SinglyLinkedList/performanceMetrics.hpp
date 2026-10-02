@@ -25,20 +25,24 @@ struct SessionPerformance
     PerformanceSortMethod sortedSearchMethod = PerformanceSortMethod::None;
 };
 
-inline SessionPerformance sessionPerformance;
+inline SessionPerformance& getSessionPerformance()
+{
+    static SessionPerformance performance;
+    return performance;
+}
 
 inline void recordSortedLinearSearch(double searchTime)
 {
-    switch (sessionPerformance.sortedSearchMethod)
+    switch (getSessionPerformance().sortedSearchMethod)
     {
         case PerformanceSortMethod::Bubble:
-            sessionPerformance.bubbleLinearSorted = searchTime;
+            getSessionPerformance().bubbleLinearSorted = searchTime;
             break;
         case PerformanceSortMethod::Insertion:
-            sessionPerformance.insertionLinearSorted = searchTime;
+            getSessionPerformance().insertionLinearSorted = searchTime;
             break;
         case PerformanceSortMethod::Quick:
-            sessionPerformance.quickLinearSorted = searchTime;
+            getSessionPerformance().quickLinearSorted = searchTime;
             break;
         case PerformanceSortMethod::None:
             break;
@@ -47,16 +51,16 @@ inline void recordSortedLinearSearch(double searchTime)
 
 inline void recordSortedBinarySearch(double searchTime)
 {
-    switch (sessionPerformance.sortedSearchMethod)
+    switch (getSessionPerformance().sortedSearchMethod)
     {
         case PerformanceSortMethod::Bubble:
-            sessionPerformance.bubbleBinarySorted = searchTime;
+            getSessionPerformance().bubbleBinarySorted = searchTime;
             break;
         case PerformanceSortMethod::Insertion:
-            sessionPerformance.insertionBinarySorted = searchTime;
+            getSessionPerformance().insertionBinarySorted = searchTime;
             break;
         case PerformanceSortMethod::Quick:
-            sessionPerformance.quickBinarySorted = searchTime;
+            getSessionPerformance().quickBinarySorted = searchTime;
             break;
         case PerformanceSortMethod::None:
             break;

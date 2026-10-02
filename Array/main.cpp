@@ -32,8 +32,8 @@ void displayMenu() {
 	cout << "5. Sorting\n";
 	cout << "6. Linear Search\n";
 	cout << "7. Analysis\n";
-    cout << "8. Dataset Summary - jiahuey \n";
-    cout << "9. Performance Summary (Comparison View) - sinyi\n";
+    cout << "8. Dataset Summary\n";
+    cout << "9. Performance Summary\n";
     cout << "10. Exit\n";
 	cout << "================================================\n";
 	cout << "Enter your choice: ";

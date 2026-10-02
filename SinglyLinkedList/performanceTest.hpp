@@ -48,7 +48,7 @@ inline void displaySinglyLinkedListPerformance()
 {
 	std::cout << "\nReminder: complete the sorting and searching options first.\n";
 	std::cout << "Only operations completed in this session have recorded times; others show 0.00 ms.\n";
-	displaySinglyLinkedListSummary(sessionPerformance);
+	displaySinglyLinkedListSummary(getSessionPerformance());
 }
 
 #endif

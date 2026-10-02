@@ -24,17 +24,12 @@ void displayMenu() {
     cout << "2. Load and Display Facility B\n";
     cout << "3. Load and Display Facility C\n";
     cout << "4. Load and Display All Datasets\n";
-    cout << "5. Sort (Bubble Sort)\n";
-    cout << "6. Sort (Insertion Sort)\n";
-    cout << "7. Sort (Quick Sort)\n";
-    cout << "8. Linear Search (Age Group / Care Type / Visit time per year)\n";
-    cout << "9. Age Group Analysis\n";
-    cout << "10. Care Type Analysis (Per Facility)\n";
-    cout << "11. Total Billing Cost (Per Facility)\n";
-    cout << "12. Dataset Summary (Per Facility)\n";
-    cout << "13. Combined Analysis (All Facilities)\n";
-    cout << "14. Performance Summary\n";
-    cout << "15. Exit\n";
+    cout << "5. Sorting\n";
+    cout << "6. Linear Search\n";
+    cout << "7. Analysis\n";
+    cout << "8. Dataset Summary\n";
+    cout << "9. Performance Summary\n";
+    cout << "10. Exit\n";
     cout << "================================================\n";
     cout << "Enter your choice: ";
 }
@@ -146,7 +141,7 @@ void chooseSearchMethod(LinkedList& target,
     int searchMethod;
     cin >> searchMethod;
 
-    sessionPerformance.sortedSearchMethod = sortedMethod;
+    getSessionPerformance().sortedSearchMethod = sortedMethod;
 
     if (searchMethod == 1) {
         linearSearchSortedFieldMenu(target, searchField);
@@ -198,7 +193,8 @@ int main() {
         displayMenu();
         cin >> choice;
 
-        if (choice >= 5 && choice <= 14) {
+    dispatch:
+        if (choice >= 5 && choice <= 20) {
             ensureAllDatasetsLoaded(
                 facilityA,
                 facilityB,
@@ -210,6 +206,56 @@ int main() {
         }
 
         switch (choice) {
+
+        case 5: {
+            cout << "\n---------- Sorting ----------\n";
+            cout << "1. Bubble Sort\n";
+            cout << "2. Insertion Sort\n";
+            cout << "3. Quick Sort\n";
+            cout << "Enter your choice: ";
+            int sortMethod;
+            cin >> sortMethod;
+            if (sortMethod < 1 || sortMethod > 3) {
+                cout << "\nInvalid choice.\n";
+                break;
+            }
+            choice = 10 + sortMethod;
+            goto dispatch;
+        }
+
+        case 6:
+            choice = 14;
+            goto dispatch;
+
+        case 7: {
+            cout << "\n---------- Analysis ----------\n";
+            cout << "1. Age Group Analysis\n";
+            cout << "2. Care Type Analysis\n";
+            cout << "3. Total Billing Cost\n";
+            cout << "4. Dataset Summary\n";
+            cout << "5. Combined Analysis\n";
+            cout << "Enter your choice: ";
+            int analysisChoice;
+            cin >> analysisChoice;
+            if (analysisChoice < 1 || analysisChoice > 5) {
+                cout << "\nInvalid choice.\n";
+                break;
+            }
+            choice = 14 + analysisChoice;
+            goto dispatch;
+        }
+
+        case 8:
+            choice = 18;
+            goto dispatch;
+
+        case 9:
+            choice = 20;
+            goto dispatch;
+
+        case 10:
+            cout << "\nExiting MetroHealth System...\n";
+            break;
 
         case 1:
             if (facilityA.loadCSV("datasets/dataset1_facility_a.csv")) {
@@ -259,7 +305,7 @@ int main() {
             combined.display();
             break;
 
-        case 5: {
+        case 11: {
             cout << "\n---------- Sort (Bubble Sort) ----------\n";
             cout << "Sort by which field?\n";
             cout << "1. Age\n";
@@ -331,7 +377,7 @@ int main() {
             }
             auto end = chrono::high_resolution_clock::now();
             double ms = chrono::duration<double, milli>(end - start).count();
-            sessionPerformance.bubbleSort = ms;
+            getSessionPerformance().bubbleSort = ms;
 
             cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
             cout << "Sort time: " << ms << " ms  (n = " << target->getSize() << ")\n";
@@ -351,7 +397,7 @@ int main() {
             break;
         }
 
-        case 6: {
+        case 12: {
             cout << "\n---------- Sort (Insertion Sort) ----------\n";
             cout << "Sort by which field?\n";
             cout << "1. Age\n";
@@ -424,7 +470,7 @@ int main() {
 
             auto end = chrono::high_resolution_clock::now();
             double ms = chrono::duration<double, milli>(end - start).count();
-            sessionPerformance.insertionSort = ms;
+            getSessionPerformance().insertionSort = ms;
 
             cout << "\n========== DATASET: " << label << " ==========\n";
             cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
@@ -444,7 +490,7 @@ int main() {
             break;
         }
 
-        case 7: {
+        case 13: {
             cout << "\n---------- Sort (Quick Sort) ----------\n";
             cout << "Sort by which field?\n";
             cout << "1. Age\n";
@@ -517,7 +563,7 @@ int main() {
             }
             auto end = chrono::high_resolution_clock::now();
             double ms = chrono::duration<double, milli>(end - start).count();
-            sessionPerformance.quickSort = ms;
+            getSessionPerformance().quickSort = ms;
 
             cout << "\n" << label << " sorted by " << fieldLabel << " (ascending).\n";
             cout << "Sort time: " << ms << " ms  (n = " << target->getSize() << ")\n";
@@ -537,7 +583,7 @@ int main() {
             break;
         }
 
-                case 8: {
+            case 14: {
             linearSearchMenu(
                 facilityA,
                 facilityB,
@@ -550,7 +596,7 @@ int main() {
             break;
         }
 
-        case 9: {
+        case 15: {
             int loadedCount = (facilityALoaded ? 1 : 0)
                             + (facilityBLoaded ? 1 : 0)
                             + (facilityCLoaded ? 1 : 0);
@@ -573,7 +619,7 @@ int main() {
             break;
         }
 
-        case 10:
+        case 16:
             cout << "\n========== CARE TYPE ANALYSIS (PER FACILITY) ==========\n";
             if (facilityALoaded) careTypeAnalysis(facilityA, "FACILITY A");
             if (facilityBLoaded) careTypeAnalysis(facilityB, "FACILITY B");
@@ -587,14 +633,14 @@ int main() {
             careTypeAnalysis(combined, "ALL FACILITIES");
             break;
 
-        case 11:
+        case 17:
             cout << "\n========== TOTAL BILLING COST (PER FACILITY) ==========\n";
             if (facilityALoaded) displayTotalBillingCost(facilityA, "FACILITY A");
             if (facilityBLoaded) displayTotalBillingCost(facilityB, "FACILITY B");
             if (facilityCLoaded) displayTotalBillingCost(facilityC, "FACILITY C");
             break;
 
-        case 12:
+        case 18:
             cout << "\n========== DATASET SUMMARY (PER FACILITY) ==========\n";
             if (facilityALoaded) displayDatasetSummary(facilityA, "FACILITY A");
             if (facilityBLoaded) displayDatasetSummary(facilityB, "FACILITY B");
@@ -606,7 +652,7 @@ int main() {
             displayDatasetSummary(combined, "COMBINED (A + B + C)");
             break;
 
-        case 13:
+        case 19:
             // Rebuild the combined list from whichever facilities
             // are currently loaded, so it never goes stale if a
             // facility gets reloaded.
@@ -628,12 +674,13 @@ int main() {
             displayDatasetSummary(combined, "COMBINED (ALL FACILITIES)");
             break;
         
-        case 14:
+        case 20:
             displaySinglyLinkedListPerformance();
             break;
 
-        case 15:
+        case 21:
             cout << "\nExiting MetroHealth System...\n";
+            choice = 10;
             break;
 
         default:
@@ -642,7 +689,7 @@ int main() {
 
         cout << "\n\n\n\n\n";
 
-    } while (choice != 15);
+    } while (choice != 10);
 
     return 0;
 }
